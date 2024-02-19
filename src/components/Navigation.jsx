@@ -15,7 +15,7 @@ const Navigation = (props) => {
                 as="a"
                 href="/"
                 variant="h6"
-                className="mr-4 cursor-pointer py-1.5 lg:ml-2">
+                className="mr-4 cursor-pointer text-2xl py-1.5 lg:ml-2">
                     Culdetect
                 </Typography>
                 <div className="lg:block">
