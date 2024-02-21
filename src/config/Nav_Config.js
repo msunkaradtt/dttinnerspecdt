@@ -3,7 +3,7 @@ const Nav_Config = [
     File: [
       {
         title: "Open",
-        tip: "Load new model to scene.",
+        tip: "Load new model to the scene.",
         as: "input",
         type: "file",
         accept: ".gltf"

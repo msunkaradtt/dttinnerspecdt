@@ -1,8 +1,9 @@
 import { proxy } from 'valtio';
 
 const state = proxy({
-    load: true,
-    selectedInput: ""
+    load: false,
+    selectedInput: "",
+    slectedInputContent: "",
 });
 
 export default state;

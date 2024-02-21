@@ -1,17 +1,40 @@
 import React from 'react'
-import { ContactShadows, Environment, OrbitControls } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { OrbitControls, Environment, PivotControls } from "@react-three/drei";
 
-const Experience = () => {
+import ModelHandler from './ModelHandler';
+
+const Experience = ({modelContent}) => {
+
     return(
         <>
-        <OrbitControls
-        minPolarAngle={0}
-        maxPolarAngle={Math.PI / 2}
-        minDistance={2}
-        maxDistance={25} />
         <ambientLight intensity={0.5} />
-        <color attach="background" args={['#E8E9ED']} />
+        <Environment preset='lobby' background blur={0.5} />
+        {modelContent !== "" ?
+        (
+        <PivotControls rotation={[0, -Math.PI / 2, 0]}
+        anchor={[0, 0, 0]}
+        scale={75}
+        depthTest={false}
+        fixed
+        annotations
+        lineWidth={2}>
+            <ModelHandler modelContent={modelContent} scale={[0.1, 0.1, 0.1]} />
+        </PivotControls>) :
+        (
+        <PivotControls rotation={[0, -Math.PI / 2, 0]}
+        anchor={[0, 0, 0]}
+        scale={75}
+        depthTest={false}
+        fixed
+        annotations
+        lineWidth={2}>
+            <mesh castShadow receiveShadow position={[0, 0, 0]}>
+                <boxGeometry args={[0.5, 0.5, 0.5]} />
+                <meshStandardMaterial attach="material" color="#6be092" />
+            </mesh>
+        </PivotControls>
+        )}
+        <OrbitControls makeDefault />
         </>
     )
 }

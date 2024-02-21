@@ -10,8 +10,16 @@ import {
     Tooltip
 } from "@material-tailwind/react"
 
+/*
+Store
+*/
+import { useSnapshot } from 'valtio'
+import state from "../../store"
+
 const NavListMenu = (props) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    const snap = useSnapshot(state)
 
     const renderItems = props.nav_data.map(
         (items) => (
@@ -23,15 +31,21 @@ const NavListMenu = (props) => {
                             {as === "input" ?
                             (<>
                             <label htmlFor={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} style={{width:"100%", height:"100%", color: "#263238"}} className="flex items-center text-sm font-bold">{title}</label>
-                            <input type={type} id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} accept={accept} onChange={(e) => {
+                            <input type={type} id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} accept={accept} onClick={() => {
+                                state.load = false
+                            }}
+                                onChange={(e) => {
                                 if(type === "file"){
                                     let inFile = e.target.files[0]
+
+                                    state.selectedInput = inFile.name
+
                                     const reader = new FileReader()
                                     reader.onload = (e) => {
-                                        console.log(e.target.result)
+                                        state.slectedInputContent = e.target.result
                                     }
 
-                                    reader.readAsText(inFile)
+                                    reader.readAsDataURL(inFile)
                                 }
                             }} />
                             </>) :
