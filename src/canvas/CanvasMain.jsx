@@ -21,7 +21,6 @@ const CanvasMain = () => {
                 <Experience modelContent={snap.slectedInputContent} />
             </Suspense>
             <gridHelper />
-            <Stats />
             <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
                 <GizmoViewport labelColor="white" axisHeadScale={1} />
             </GizmoHelper>

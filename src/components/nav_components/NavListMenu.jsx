@@ -31,7 +31,7 @@ const NavListMenu = (props) => {
                             {as === "input" ?
                             (<>
                             <label htmlFor={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} style={{width:"100%", height:"100%", color: "#263238"}} className="flex items-center text-sm font-bold">{title}</label>
-                            <input type={type} id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} accept={accept} onClick={() => {
+                            <input type={type} id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"} onClick={() => {
                                 state.load = false
                             }}
                                 onChange={(e) => {

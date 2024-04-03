@@ -1,0 +1,78 @@
+type Models {
+  model_created: String!
+  model_id: Int!
+  model_info: JSON!
+  model_name: String!
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'Models' "
+  modelsByModel_id(model_id: Int!): [Models]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "models"
+      configuration: "postgresql_config"
+    )
+  modelsByModel_idAndModel_created(
+    model_id: Int!
+    model_created: String!
+  ): [Models]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "models"
+      configuration: "postgresql_config"
+    )
+  modelsList: [Models]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "models"
+      configuration: "postgresql_config"
+    )
+  modelsPaginatedList(first: Int, after: Int): [Models]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "model_created", "model_id", "model_info", "model_name" FROM "models" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'Models' "
+  deleteModels(
+    model_id: Int!
+  ): Models
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "models"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertModels(
+    model_created: String!
+    model_info: JSON!
+    model_name: String!
+    model_id: Int!
+  ): Models
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "models"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+}
