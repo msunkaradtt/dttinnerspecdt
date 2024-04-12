@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react'
-import {MeshNormalMaterial} from 'three'
-import { OrbitControls, Environment, PivotControls, Sky, Wireframe } from "@react-three/drei"
+import React from 'react'
+
+import { OrbitControls, Environment, PivotControls, Sky } from "@react-three/drei"
 
 import * as THREE from "three";
 
@@ -10,7 +10,7 @@ import ModelHandler from './ModelHandler'
 
 const Experience = ({modelContent}) => {
 
-    const [{ position, rotation, scale, color, showMesh }, set, get] = useControls("Object Controls", () => ({
+    const [{ position, rotation, scale, color }, set, get] = useControls("Object Controls", () => ({
         transform: folder({
             position: {
                 value: [0, 0, 0],
@@ -28,9 +28,6 @@ const Experience = ({modelContent}) => {
         }),
         Material: folder({
             color: "#808080"
-        }),
-        Mesh: folder({
-            showMesh: false
         })
     }))
 
@@ -60,7 +57,11 @@ const Experience = ({modelContent}) => {
                 rotation: [rotation.x, rotation.y, rotation.z]
             })
         }}>
-            <ModelHandler modelContent={modelContent} position={position} rotation={rotation} scale={scale} color={color} showMesh={showMesh} />
+            <ModelHandler modelContent={modelContent}
+            position={position}
+            rotation={rotation}
+            scale={scale}
+            color={color}/>
         </PivotControls>) :
         (
         <PivotControls rotation={[0, -Math.PI / 2, 0]}

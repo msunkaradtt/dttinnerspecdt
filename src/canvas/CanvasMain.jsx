@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Canvas } from "@react-three/fiber"
-import { Stats, GizmoHelper, GizmoViewport } from "@react-three/drei"
+import { GizmoHelper, GizmoViewport } from "@react-three/drei"
+import { Perf } from 'r3f-perf'
 
 import Experience from './Experience'
 
@@ -24,6 +25,7 @@ const CanvasMain = () => {
             <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
                 <GizmoViewport labelColor="white" axisHeadScale={1} />
             </GizmoHelper>
+            <Perf position='bottom-left' />
         </Canvas>
         </>
     )
