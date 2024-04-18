@@ -50,7 +50,7 @@ const ModelHandler = (props) => {
                     model_ref.current.material.wireframe = v
                 }
             }
-        })
+        }, {collapsed: true})
     })
 
     const lut = useMemo(() => {

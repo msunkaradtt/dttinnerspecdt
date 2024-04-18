@@ -19,7 +19,7 @@ const Loading = () => {
 
             setTimeout(() => {
                 state.load = true
-            }, 1000)
+            }, 2000)
         }
 
     }, [progress, total, loaded, item])

@@ -25,11 +25,11 @@ const Experience = ({modelContent}) => {
                 min: 0,
                 step: 0.1
             }
-        }),
+        }, {collapsed: true}),
         Material: folder({
             color: "#808080"
-        })
-    }))
+        }, {collapsed: true})
+    }), {collapsed: true})
 
     return(
         <>

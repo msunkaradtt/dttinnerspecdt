@@ -21,7 +21,9 @@ const stepzen_client = new ApolloClient({
  */
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-<ThemeProvider>
-  <App />
-</ThemeProvider>
+  <ThemeProvider>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </ThemeProvider>
 )
