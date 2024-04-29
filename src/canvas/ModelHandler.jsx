@@ -72,6 +72,8 @@ const ModelHandler = (props) => {
         }
     }
 
+    console.log(nodes)
+
     const loadedGeo = nodes.mesh_0.geometry
 
     const coloredGeo = useMemo(() => {

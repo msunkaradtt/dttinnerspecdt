@@ -4,7 +4,8 @@ const state = proxy({
     load: false,
     selectedInput: "",
     slectedInputContent: "",
-    maptilerkey: "puyNhJT17nvD1p0EyJ5L"
+    maptilerkey: "vz9DhE2ANYaSbfzjJpye",
+    activeTab: "Normal"
 });
 
 export default state;
