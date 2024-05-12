@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { OrbitControls, Environment, PivotControls, Sky } from "@react-three/drei"
 
-import * as THREE from "three";
+import * as THREE from "three"
 
 import { folder, useControls } from "leva"
 
 import ModelHandler from './ModelHandler'
+import {ModelModal} from '../components'
 
 const Experience = ({modelContent}) => {
 
@@ -30,6 +31,10 @@ const Experience = ({modelContent}) => {
             color: "#808080"
         }, {collapsed: true})
     }), {collapsed: true})
+
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => setOpen(!open)
 
     return(
         <>
@@ -83,13 +88,14 @@ const Experience = ({modelContent}) => {
                 rotation: [rotation.x, rotation.y, rotation.z]
             })
         }}>
-            <mesh castShadow receiveShadow position={position} rotation={rotation} scale={scale} >
+            <mesh castShadow receiveShadow position={position} rotation={rotation} scale={scale} onContextMenu={handleOpen}>
                 <boxGeometry args={[0.5, 0.5, 0.5]} />
                 <meshStandardMaterial attach="material" color={color} />
+                <ModelModal open={open} handleOpen={handleOpen} modelName={"DTT_Cube"} />
             </mesh>
         </PivotControls>
         )}
-        <OrbitControls makeDefault />
+        <OrbitControls makeDefault rotateSpeed={2} minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
         </>
     )
 }
