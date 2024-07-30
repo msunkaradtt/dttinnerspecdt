@@ -28,6 +28,20 @@ const ModalTable = () => {
                             <Input id="ro23" defaultValue={2.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
                         </td>
                     </tr>
+                    <tr key="value4">
+                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
+                            <Input id="ro31" defaultValue={0.9} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
+                            <Input id="ro32" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
+                            <Input id="ro33" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
+                        </td>
+                    </tr>
+                    <tr key="value5">
+                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
+                            <Input id="ro41" defaultValue={0.9} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
+                            <Input id="ro42" defaultValue={1.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
+                            <Input id="ro43" defaultValue={2.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </Card>

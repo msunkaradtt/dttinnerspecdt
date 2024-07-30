@@ -6,7 +6,7 @@ const Nav_Config = [
         tip: "Load new model to the scene.",
         as: "input",
         type: "file",
-        accept: ".gltf"
+        accept: ".glb"
       },
       {
         title: "Save",
@@ -113,9 +113,10 @@ const Nav_Config = [
       },
       {
         title: "PEC",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: ""
+        tip: "Load PEC data on to the model",
+        as: "input",
+        type: "file",
+        accept: ".csv"
       },
       {
         title: "Corrsense",

@@ -95,7 +95,7 @@ const Experience = ({modelContent}) => {
             </mesh>
         </PivotControls>
         )}
-        <OrbitControls makeDefault rotateSpeed={2} minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
+        <OrbitControls makeDefault rotateSpeed={2} minPolarAngle={0} maxPolarAngle={Math.PI / 1.5} />
         </>
     )
 }
