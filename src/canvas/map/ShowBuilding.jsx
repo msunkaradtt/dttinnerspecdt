@@ -5,7 +5,7 @@ import {Source, Layer} from "react-map-gl/maplibre"
 
 
 const ShowBuilding = ({SOURCE_URL}) => {
-    const {showBuilding, opacityBuilding} = useControls({
+    const {showBuilding, opacityBuilding} = useControls("Map",{
         MapControls: folder({
             showBuilding: false,
             opacityBuilding: {
@@ -15,7 +15,7 @@ const ShowBuilding = ({SOURCE_URL}) => {
                 step: 0.1
             }
         }, {collapsed: true})
-    })
+    }, {collapsed: true})
 
     return(
         <>

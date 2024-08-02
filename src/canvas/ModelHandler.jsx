@@ -7,21 +7,8 @@ import { folder, useControls } from "leva"
 
 import {ModelModal} from '../components'
 
-const hexToRGB = hex => {
-    let alpha = false,
-    h = hex.slice(hex.startsWith('#') ? 1 : 0);
-    if (h.length === 3) h = [...h].map(x => x + x).join('');
-    else if (h.length === 8) alpha = true;
-    h = parseInt(h, 16);
-
-    return (
-        (h >>> (alpha ? 24 : 16)) +
-        ',' +
-        ((h & (alpha ? 0x00ff0000 : 0x00ff00)) >>> (alpha ? 16 : 8)) +
-        ',' +
-        ((h & (alpha ? 0x0000ff00 : 0x0000ff)) >>> (alpha ? 8 : 0))
-    )
-}
+import Box from './Box'
+import Model from './Model'
 
 const pointAngle = (x, y, z) => {
 
@@ -38,7 +25,7 @@ const ModelHandler = (props) => {
 
     const handleOpen = () => setOpen(!open)
 
-    const {map, cm_min, cm_max} = useControls({
+    /*const {map, cm_min, cm_max} = useControls({
         ColorMap: folder({
             showColorMap: {
                 value: false,
@@ -70,16 +57,16 @@ const ModelHandler = (props) => {
         lut.setMax(cm_max)
 
         return lut
-    }, [map, cm_min, cm_max])
+    }, [map, cm_min, cm_max])*/
 
     const { nodes } = useGLTF(props.modelContent)
 
-    const loadedGeo = nodes.world.children[0].geometry
-    const loadedMat = nodes.world.children[0].material
+    //const loadedGeo = nodes.world.children[0].geometry
+    //const loadedMat = nodes.world.children[0].material
 
     //console.log(loadedGeo.attributes.position)
 
-    const sensorValues = []
+    /*const sensorValues = []
 
     for(let i = 0; i < loadedGeo.attributes.position.array.length; i += 3){
         const point = {'x': 0.0, 'y': 0.0, 'z': 0.0}
@@ -136,19 +123,18 @@ const ModelHandler = (props) => {
 
     loadedMat.color.r = color_rgb[0]/255
     loadedMat.color.g = color_rgb[1]/255
-    loadedMat.color.b = color_rgb[2]/255
+    loadedMat.color.b = color_rgb[2]/255*/
+
+    const childCubeComponents = nodes.world.children.map((child, index) => (
+        <Model key={index}
+        modelGeo={child.geometry}
+        modelMat={child.material}
+        modelScale={props.modelScale} modelColor={props.modelColor} />
+    ))
 
     return(
         <group {...props} dispose={null}>
-            <mesh
-            castShadow
-            receiveShadow
-            geometry={coloredGeo}
-            material={loadedMat}
-            ref={model_ref}
-            onContextMenu={handleOpen}
-            />
-            <ModelModal open={open} handleOpen={handleOpen} modelName={"DTT_Pipe_1"} />
+            {childCubeComponents}
         </group>
     )
 
