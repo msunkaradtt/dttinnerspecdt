@@ -21,6 +21,11 @@ const NavListMenu = (props) => {
 
     const snap = useSnapshot(state)
 
+    const pageRefocused = () => {
+        ++state.closeCounter
+        window.removeEventListener("focus", pageRefocused);
+    }
+
     const renderItems = props.nav_data.map(
         (items) => (
             items.map(({title, tip, as, type, accept}, key) => (
@@ -35,8 +40,10 @@ const NavListMenu = (props) => {
                             className="flex items-center text-sm font-bold">{title}</label>
                             <input type={type} accept={accept}
                             id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"}
-                            onClick={() => {
+                            onClick={(e) => {
                                 state.load = false
+
+                                window.addEventListener("focus", pageRefocused)
                             }}
                             onChange={(e) => {
                                 if(type === "file"){

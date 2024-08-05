@@ -125,7 +125,7 @@ const ModelHandler = (props) => {
     loadedMat.color.g = color_rgb[1]/255
     loadedMat.color.b = color_rgb[2]/255*/
 
-    const childCubeComponents = nodes.world.children.map((child, index) => (
+    const childComponents = nodes.world.children.map((child, index) => (
         <Model key={index}
         modelGeo={child.geometry}
         modelMat={child.material}
@@ -134,7 +134,7 @@ const ModelHandler = (props) => {
 
     return(
         <group {...props} dispose={null}>
-            {childCubeComponents}
+            {childComponents}
         </group>
     )
 

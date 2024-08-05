@@ -17,12 +17,17 @@ const Loading = () => {
     useEffect(() => {
         if(progress === 100){
 
-            setTimeout(() => {
+            let timer = setTimeout(() => {
                 state.load = true
+                state.closeCounter = 0
             }, 2000)
+
+            return () => {
+                clearTimeout(timer)
+            }
         }
 
-    }, [progress, total, loaded, item])
+    }, [progress, total, loaded, item, snap.closeCounter])
 
     return(
         <div className={`fixed top-0 w-full h-full z-50 pointer-events-none flex justify-center items-center bg-indigo-50 ${snap.load ? "opacity-0" : "opacity-100"}`}>
