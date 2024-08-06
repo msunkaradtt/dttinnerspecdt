@@ -10,6 +10,8 @@ import {
     Tooltip
 } from "@material-tailwind/react"
 
+import NavListItem from "./NavListItem"
+
 /*
 Store
 */
@@ -21,11 +23,6 @@ const NavListMenu = (props) => {
 
     const snap = useSnapshot(state)
 
-    const pageRefocused = () => {
-        ++state.closeCounter
-        window.removeEventListener("focus", pageRefocused);
-    }
-
     const renderItems = props.nav_data.map(
         (items) => (
             items.map(({title, tip, as, type, accept}, key) => (
@@ -34,32 +31,8 @@ const NavListMenu = (props) => {
                         <MenuItem className="flex items-center gap-3 rounded-lg">
                             <>
                             {as === "input" ?
-                            (<>
-                            <label htmlFor={title.split(" ").join("").toLocaleLowerCase() + "_dtt"}
-                            style={{width:"100%", height:"100%", color: "#263238"}}
-                            className="flex items-center text-sm font-bold">{title}</label>
-                            <input type={type} accept={accept}
-                            id={title.split(" ").join("").toLocaleLowerCase() + "_dtt"}
-                            onClick={(e) => {
-                                state.load = false
-
-                                window.addEventListener("focus", pageRefocused)
-                            }}
-                            onChange={(e) => {
-                                if(type === "file"){
-                                    let inFile = e.target.files[0]
-
-                                    state.selectedInput = inFile.name
-
-                                    const reader = new FileReader()
-                                    reader.onload = (e) => {
-                                        state.slectedInputContent = e.target.result
-                                    }
-
-                                    reader.readAsDataURL(inFile)
-                                }
-                            }} />
-                            </>) :
+                            (<NavListItem title={title} type={type} accept={accept} />)
+                            :
                             (<Typography variant="h6" color="blue-gray" className="flex items-center text-sm font-bold">{title}</Typography>)}
                             </>
                         </MenuItem>
