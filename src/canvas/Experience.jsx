@@ -30,7 +30,9 @@ const Experience = ({modelContent}) => {
             {modelContent !== "" ?
             (
                 <ModelHandler
-                modelContent={modelContent} modelScale={gScale} modelColor={gColor} />
+                modelContent={modelContent}
+                modelScale={gScale}
+                modelColor={gColor} />
             ) :
             (
                 <Box modelScale={gScale} modelColor={gColor} />

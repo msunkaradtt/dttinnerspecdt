@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-
+import Papa from "papaparse"
 /*
 Store
 */
@@ -21,7 +21,7 @@ const NavListItem = (props) => {
     }
 
     const itemOnChange = (e, props) => {
-        if(props.type === "file"){
+        if(props.type === "file" && props.accept === ".glb") {
             let inFile = e.target.files[0]
 
             state.selectedInput = inFile.name
@@ -33,6 +33,18 @@ const NavListItem = (props) => {
             }
 
             reader.readAsDataURL(inFile)
+        }
+
+        if(props.type === "file" && props.accept === ".csv") {
+            let inFile = e.target.files[0]
+            Papa.parse(inFile, {
+                header: true,
+                complete: (results) => {
+                    const data = results.data
+                    state.pecDataJSON = data
+                    state.pecDataLoaded = true
+                }
+            })
         }
     }
 

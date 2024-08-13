@@ -1,14 +1,20 @@
-import React, { useMemo, useRef, useState } from 'react'
-import { useGLTF } from "@react-three/drei"
-import { Float32BufferAttribute } from "three"
+import React, { useMemo, useRef, useState, useEffect } from 'react'
+import { useGLTF, PivotControls } from "@react-three/drei"
 
 import { Lut } from "three/examples/jsm/math/Lut"
 import { folder, useControls } from "leva"
 
-import {ModelModal} from '../components'
-
-import Box from './Box'
 import Model from './Model'
+
+import { pecDataFnc } from './modelDataFnc'
+
+import { pecMapping } from "./modelFnc"
+
+/*
+Store
+*/
+import { useSnapshot } from 'valtio'
+import state from "../store"
 
 const pointAngle = (x, y, z) => {
 
@@ -20,13 +26,15 @@ const pointAngle = (x, y, z) => {
 
 const ModelHandler = (props) => {
     const model_ref = useRef()
+    const snap = useSnapshot(state)
 
-    const [open, setOpen] = useState(false)
+    //const [open, setOpen] = useState(false)
+    const [active, setActive] = useState(false)
 
-    const handleOpen = () => setOpen(!open)
+    //const handleOpen = () => setOpen(!open)
 
-    /*const {map, cm_min, cm_max} = useControls({
-        ColorMap: folder({
+    /*const [{map, cm_min, cm_max}, set] = useControls("PEC", {
+        "ColorMap": folder({
             showColorMap: {
                 value: false,
                 onChange: (v) => {
@@ -47,7 +55,24 @@ const ModelHandler = (props) => {
                 }
             }
         }, {collapsed: true})
-    })
+    })*/
+
+    const [{map, cm_min, cm_max}, set] = useControls("PEC", () => ({
+        "ColorMap": folder({
+            showColorMap: {
+                value: false
+            },
+            map: {
+                value: "rainbow",
+                options: ["rainbow", "cooltowarm", "blackbody", "grayscale"]
+            },
+            cm_min: 5,
+            cm_max: 11.5,
+            showMes: {
+                value: false
+            }
+        }, {collapsed: true})
+    }), {collapsed: true})
 
     const lut = useMemo(() => {
         const lut = new Lut()
@@ -57,9 +82,23 @@ const ModelHandler = (props) => {
         lut.setMax(cm_max)
 
         return lut
-    }, [map, cm_min, cm_max])*/
+    }, [map, cm_min, cm_max])
 
     const { nodes } = useGLTF(props.modelContent)
+
+    useEffect(() => {
+        /*
+         * Process the recieved PEC data
+        */
+        if(snap.pecDataLoaded){
+            const {segmentData, max, min} = pecDataFnc(snap.pecDataJSON)
+            set({cm_min: min, cm_max: max})
+
+            const childrenMesh = model_ref.current.children
+
+            pecMapping(childrenMesh[0].geometry, segmentData)
+        }
+    }, [snap.pecDataLoaded, snap.pecDataJSON])
 
     //const loadedGeo = nodes.world.children[0].geometry
     //const loadedMat = nodes.world.children[0].material
@@ -126,6 +165,7 @@ const ModelHandler = (props) => {
     loadedMat.color.b = color_rgb[2]/255*/
 
     const childComponents = nodes.world.children.map((child, index) => (
+
         <Model key={index}
         modelGeo={child.geometry}
         modelMat={child.material}
@@ -133,9 +173,21 @@ const ModelHandler = (props) => {
     ))
 
     return(
-        <group {...props} dispose={null}>
-            {childComponents}
-        </group>
+        <PivotControls rotation={[0, -Math.PI / 2, 0]}
+        anchor={[0, 0, 0]}
+        scale={75}
+        depthTest={false}
+        fixed
+        annotations
+        lineWidth={2}
+        visible={active}>
+            <group {...props}
+            ref={model_ref}
+            dispose={null}
+            onClick={() => setActive(!active)}>
+                {childComponents}
+            </group>
+        </PivotControls>
     )
 
 }

@@ -5,6 +5,8 @@ const state = proxy({
     closeCounter: 0,
     selectedInput: "",
     slectedInputContent: "",
+    pecDataLoaded: false,
+    pecDataJSON: "",
     maptilerkey: "vz9DhE2ANYaSbfzjJpye",
     activeTab: "Normal"
 });

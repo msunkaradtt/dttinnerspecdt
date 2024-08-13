@@ -39,6 +39,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "leva": "^0.9.35",
+    "papaparse": "^5.4.1",
     "postcss": "^8.4.31",
     "r3f-perf": "^7.2.1",
     "tailwindcss": "^3.3.3",
