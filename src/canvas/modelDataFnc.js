@@ -2,10 +2,13 @@ export const pecDataFnc = (data) => {
     const pecData = data
     const segmentData = pecData.reduce((acc, curr) => {
         const { Location, ...rest } = curr
+        let i = 0
         Object.entries(rest).forEach(([key, value]) => {
             if(value !== undefined) {
-                acc[key] = acc[key] || {}
-                acc[key][Location] = value
+                let keyName = "segment_" + i
+                acc[keyName] = acc[keyName] || {}
+                acc[keyName][Location] = value
+                i++
             }
         })
         return acc

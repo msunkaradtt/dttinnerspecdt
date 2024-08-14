@@ -30,6 +30,69 @@ const pointAngle = (x, y, z) => {
     return Math.round(degrees);
 }
 
-export const pecMapping = (childGeo, segmentData) => {
-    console.log(childGeo)
+export const mapPECValues = (childGeoPositions) => {
+    const mappedValues = []
+
+    for(let i = 0; i < childGeoPositions.array.length; i += 3) {
+        const point = {'x': 0.0, 'y': 0.0, 'z': 0.0}
+        const pointValues = {'point': [], 'angle': 0}
+
+        const chunk = childGeoPositions.array.slice(i, i + 3)
+
+        point.x = chunk[0]
+        point.y = chunk[1]
+        point.z = chunk[2]
+
+        let getpointAngle = pointAngle(point.x, point.y, point.z)
+
+        pointValues.point = chunk
+        pointValues.angle = getpointAngle
+
+        mappedValues.push(pointValues)
+    }
+
+    return mappedValues
+}
+
+export const pecMapping = (childGeo, sensorValues, segmentData, lut) => {
+    if(!childGeo || !sensorValues) return
+
+    const colors = childGeo.attributes.color
+
+    for(let i = 0; i < sensorValues.length; i++) {
+        const sensorValue = sensorValues[i].angle
+
+        let setValue = 0
+        if(sensorValue >= 0 && sensorValue < 320){
+            setValue = segmentData['0']
+        }
+
+        if(sensorValue >= 320 && sensorValue < 330){
+            setValue = segmentData['320']
+        }
+
+        if(sensorValue >= 330 && sensorValue < 340){
+            setValue = segmentData['330']
+        }
+
+        if(sensorValue >= 340 && sensorValue < 350){
+            setValue = segmentData['340']
+        }
+
+        if(sensorValue >= 350){
+            setValue = segmentData['350']
+        }
+
+        if(sensorValue < 0){
+            setValue = segmentData['0']
+        }
+
+        const color = lut.getColor(setValue)
+
+        if(color === undefined) {
+            console.error("Unable to determine color for value:", sensorValue)
+        } else {
+            colors.setXYZ(i, color.r, color.g, color.b)
+        }
+    }
 }
