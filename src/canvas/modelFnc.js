@@ -1,4 +1,5 @@
-import { Float32BufferAttribute } from "three"
+import * as THREE from 'three'
+import { useFrame, useThree } from "@react-three/fiber"
 
 export const hexToRGB = hex => {
     let alpha = false,
@@ -20,7 +21,14 @@ export const addColorAttribute = (childGeo, lenPositions) => {
     const defaultColor = new Float32Array(lenPositions * 3)
     defaultColor.fill(1)
 
-    childGeo.setAttribute('color', new Float32BufferAttribute(defaultColor, 3))
+    childGeo.setAttribute('color', new THREE.Float32BufferAttribute(defaultColor, 3))
+}
+
+export const addPECSensorAttribute = (childGeo, lenPositions) => {
+    const defaultSensorValues = new Float32Array(lenPositions)
+    defaultSensorValues.fill(0)
+
+    childGeo.setAttribute('PECsensor', new THREE.Float32BufferAttribute(defaultSensorValues, 1))
 }
 
 const pointAngle = (x, y, z) => {
@@ -58,6 +66,7 @@ export const pecMapping = (childGeo, sensorValues, segmentData, lut) => {
     if(!childGeo || !sensorValues) return
 
     const colors = childGeo.attributes.color
+    const PECsensorValues = childGeo.attributes.PECsensor
 
     for(let i = 0; i < sensorValues.length; i++) {
         const sensorValue = sensorValues[i].angle
@@ -89,10 +98,27 @@ export const pecMapping = (childGeo, sensorValues, segmentData, lut) => {
 
         const color = lut.getColor(setValue)
 
+        PECsensorValues.setX(i, setValue)
+
         if(color === undefined) {
             console.error("Unable to determine color for value:", sensorValue)
         } else {
             colors.setXYZ(i, color.r, color.g, color.b)
         }
     }
+}
+
+export const MouseTracker = (props) => {
+    const { camera } = useThree()
+
+    useFrame((state) => {
+        const mouse = new THREE.Vector2(state.mouse.x, state.mouse.y)
+        const raycaster = new THREE.Raycaster()
+        raycaster.setFromCamera(mouse, camera)
+        const point = new THREE.Vector3()
+        raycaster.ray.at(10, point)
+        props.setMousePosition(point)
+    })
+
+    return null
 }

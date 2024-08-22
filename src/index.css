@@ -23,3 +23,7 @@ input[type=file]{
     overflow: hidden;
     opacity: 0;
 }
+
+.content {
+    transform: translate3d(calc(50% + 40px), 0, 0);
+}

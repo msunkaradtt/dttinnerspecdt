@@ -8,7 +8,8 @@ const state = proxy({
     pecDataLoaded: false,
     pecDataJSON: "",
     maptilerkey: "vz9DhE2ANYaSbfzjJpye",
-    activeTab: "Normal"
+    activeTab: "Normal",
+    pecValue: 0.0,
 });
 
 export default state;

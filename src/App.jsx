@@ -28,7 +28,7 @@ function App() {
   const snap = useSnapshot(state)
 
   return (
-    <main>
+    <main className="bg-indigo-50">
       <Navigation comp_name="navigation" nav_config={Nav_Config} />
       <Tabs value={snap.activeTab}>
         <TabsHeader className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"

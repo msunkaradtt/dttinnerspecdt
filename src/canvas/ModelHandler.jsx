@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react'
-import { useGLTF, PivotControls } from "@react-three/drei"
+import { useGLTF, PivotControls, Bvh } from "@react-three/drei"
 
 import { Lut } from "three/examples/jsm/math/Lut"
 import { folder, useControls } from "leva"
@@ -8,7 +8,9 @@ import Model from './Model'
 
 import { pecDataFnc } from './modelDataFnc'
 
-import { pecMapping, mapPECValues, addColorAttribute } from "./modelFnc"
+import { pecMapping, mapPECValues, addColorAttribute, addPECSensorAttribute } from "./modelFnc"
+
+import VertexLabels from "./VertexLabels"
 
 /*
 Store
@@ -22,29 +24,38 @@ const ModelHandler = (props) => {
 
     const [active, setActive] = useState(false)
 
-    const [{map, cm_min, cm_max}, set] = useControls("PEC", () => ({
+    const [{map, cm_min, cm_max, showLabels}, set, get] = useControls("PEC", () => ({
         "ColorMap": folder({
             showColorMap: {
                 value: false,
                 onChange: (v) => {
                     model_ref.current.children[0].material.vertexColors = v
                     model_ref.current.children[0].material.needsUpdate = true
-                }
+                },
+                disabled: snap.pecDataLoaded ? false : true
+            },
+            showLabels: {
+                value: false,
+                disabled: snap.pecDataLoaded ? false : true
             },
             map: {
                 value: "rainbow",
-                options: ["rainbow", "cooltowarm", "blackbody", "grayscale"]
+                options: ["rainbow", "cooltowarm", "blackbody", "grayscale"],
             },
-            cm_min: 5,
-            cm_max: 11.5,
-            showMes: {
+            cm_min: {
+                value: 5,
+            },
+            cm_max: {
+                value: 11.5,
+            },
+            showMesh: {
                 value: false,
                 onChange: (v) => {
                     model_ref.current.children[0].material.wireframe = v
                 }
             }
         }, {collapsed: true})
-    }), {collapsed: true})
+    }), {collapsed: true}, [snap.pecDataLoaded])
 
     const lut = useMemo(() => {
         const lut = new Lut()
@@ -75,6 +86,8 @@ const ModelHandler = (props) => {
 
                 addColorAttribute(childGeo, childGeo.attributes.position.count)
 
+                addPECSensorAttribute(childGeo, childGeo.attributes.position.count)
+
                 let sensorValues = mapPECValues(childGeo.attributes.position)
 
                 pecMapping(childGeo, sensorValues, segmentData[childMesh.name], lut)
@@ -87,10 +100,11 @@ const ModelHandler = (props) => {
         modelIndex={index}
         modelGeo={child.geometry}
         modelMat={child.material}
-        modelScale={props.modelScale} modelColor={props.modelColor} />
+        modelScale={props.modelScale} modelColor={props.modelColor} showLabels={showLabels} />
     ))
 
     return(
+        <>
         <PivotControls rotation={[0, -Math.PI / 2, 0]}
         anchor={[0, 0, 0]}
         scale={75}
@@ -99,13 +113,17 @@ const ModelHandler = (props) => {
         annotations
         lineWidth={2}
         visible={active}>
-            <group {...props}
-            ref={model_ref}
-            dispose={null}
-            onClick={() => setActive(!active)}>
-                {childComponents}
-            </group>
+            <Bvh firstHitOnly enabled={true}>
+                <group {...props}
+                ref={model_ref}
+                dispose={null}
+                onDoubleClick={() => setActive(!active)}>
+                    {childComponents}
+                </group>
+            </Bvh>
+            {showLabels ? <VertexLabels /> : null}
         </PivotControls>
+        </>
     )
 
 }
