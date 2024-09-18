@@ -1,4 +1,5 @@
-import { proxy } from 'valtio';
+import { proxy } from 'valtio'
+import * as THREE from 'three'
 
 const state = proxy({
     load: false,
@@ -9,7 +10,9 @@ const state = proxy({
     pecDataJSON: "",
     maptilerkey: "vz9DhE2ANYaSbfzjJpye",
     activeTab: "Normal",
-    pecValue: 0.0,
+    labelValue: 0.0,
+    labelPos: new THREE.Vector3(),
+    labelVis: false
 });
 
 export default state;

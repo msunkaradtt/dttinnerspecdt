@@ -4,8 +4,6 @@ import { useRef, useEffect, useState, useMemo } from 'react'
 import { Helper } from "@react-three/drei"
 import { MeshBVHHelper } from 'three-mesh-bvh'
 
-import VertexLabels from "./VertexLabels"
-
 import * as THREE from 'three'
 
 /*
@@ -78,33 +76,47 @@ const Model = (props) => {
     }
 
     return(
-    <mesh
-    ref={mesh_ref}
-    {...props}
-    name={segmentName}
-    castShadow
-    receiveShadow
-    geometry={props.modelGeo}
-    material={props.modelMat}
-    scale={props.modelScale}
-    onPointerMove={(e) => {
-        sphere_ref.current.position.copy(mesh_ref.current.worldToLocal(e.point))
+        <>
+        <mesh
+        ref={mesh_ref}
+        {...props}
+        name={segmentName}
+        castShadow
+        receiveShadow
+        geometry={props.modelGeo}
+        material={props.modelMat}
+        scale={props.modelScale}
+        onPointerMove={(e) => {
+        let mesh_pos_copy = mesh_ref.current.worldToLocal(e.point)
+        state.labelPos = mesh_pos_copy
+        sphere_ref.current.position.copy(mesh_pos_copy)
         if(mesh_ref.current.geometry.attributes.PECsensor !== undefined) {
             const pecSensorData = mesh_ref.current.geometry.attributes.PECsensor.array
             const {position, index} = findNearestVertex(e.point)
-            state.pecValue = pecSensorData[index]
+            state.labelValue = pecSensorData[index]
         }
-    }}
-    onPointerOver={() => (sphere_ref.current.visible = true)}
-    onPointerOut={() => (sphere_ref.current.visible = false)}
-    >
-        <mesh raycast={() => null} ref={sphere_ref} visible={false}>
-            <sphereGeometry args={[0.0020]} />
-            <meshBasicMaterial color="red" toneMapped={false} />
+        }}
+        onPointerOver={() => {
+            sphere_ref.current.visible = true
+            state.labelVis = true
+        }}
+        onPointerOut={() => {
+            sphere_ref.current.visible = false
+            state.labelVis = false
+        }}
+        >
+            <mesh raycast={() => null} ref={sphere_ref} visible={false}>
+                <sphereGeometry args={[0.0020]} />
+                <meshBasicMaterial color="red" toneMapped={false} />
+            </mesh>
         </mesh>
-        <Helper type={MeshBVHHelper} args={[0, 0, false, false]} />
-    </mesh>
+        </>
     )
 }
 
 export default Model
+
+/*
+TODO:
+<Helper type={MeshBVHHelper} args={[0, 0, false, false]} />
+*/

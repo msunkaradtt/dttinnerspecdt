@@ -10,7 +10,8 @@ import { pecDataFnc } from './modelDataFnc'
 
 import { pecMapping, mapPECValues, addColorAttribute, addPECSensorAttribute } from "./modelFnc"
 
-import VertexLabels from "./VertexLabels"
+import ToolTipCursor from "./ToolTipCursor"
+import { ModelModal } from "../components"
 
 /*
 Store
@@ -23,6 +24,7 @@ const ModelHandler = (props) => {
     const snap = useSnapshot(state)
 
     const [active, setActive] = useState(false)
+    const [showContextMenu, setShowContextMenu] = useState(false)
 
     const [{map, cm_min, cm_max, showLabels}, set, get] = useControls("PEC", () => ({
         "ColorMap": folder({
@@ -100,7 +102,7 @@ const ModelHandler = (props) => {
         modelIndex={index}
         modelGeo={child.geometry}
         modelMat={child.material}
-        modelScale={props.modelScale} modelColor={props.modelColor} showLabels={showLabels} />
+        modelScale={props.modelScale} modelColor={props.modelColor} />
     ))
 
     return(
@@ -117,11 +119,13 @@ const ModelHandler = (props) => {
                 <group {...props}
                 ref={model_ref}
                 dispose={null}
-                onDoubleClick={() => setActive(!active)}>
+                onClick={() => setActive(!active)}
+                onContextMenu={() => setShowContextMenu(!showContextMenu)}>
                     {childComponents}
                 </group>
             </Bvh>
-            {showLabels ? <VertexLabels /> : null}
+            {showLabels ? <ToolTipCursor /> : null}
+            {showContextMenu ? <ModelModal open={showContextMenu} handleOpen={() => setShowContextMenu(!showContextMenu)} modelName={"Pipe_1"} /> : null}
         </PivotControls>
         </>
     )

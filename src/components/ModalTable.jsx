@@ -1,50 +1,35 @@
-import React from "react"
+import React, { useState } from "react";
+import { Input } from "@material-tailwind/react";
 
-import { Card, Input } from "@material-tailwind/react"
+const ModalTable = (props) => {
 
-const ModalTable = () => {
-    return(
-        <Card className="h-full w-full overflow-scroll">
-            <table className="w-full min-w-max table-auto text-left">
-                <tbody>
-                    <tr key="value1">
-                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
-                            <Input id="ro1" defaultValue={0.0} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro2" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro3" defaultValue={0.0} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                        </td>
-                    </tr>
-                    <tr key="value2">
-                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
-                            <Input id="ro11" defaultValue={0.0} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro12" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro13" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
-                        </td>
-                    </tr>
-                    <tr key="value3">
-                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
-                            <Input id="ro21" defaultValue={0.9} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro22" defaultValue={1.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro23" defaultValue={2.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
-                        </td>
-                    </tr>
-                    <tr key="value4">
-                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
-                            <Input id="ro31" defaultValue={0.9} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro32" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro33" defaultValue={0.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
-                        </td>
-                    </tr>
-                    <tr key="value5">
-                        <td className="flex flex-row p-4 border-b border-blue-gray-50">
-                            <Input id="ro41" defaultValue={0.9} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro42" defaultValue={1.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}} />
-                            <Input id="ro43" defaultValue={2.5} className=" !border-t-blue-gray-200 focus:!border-t-gray-900" labelProps={{className: "before:content-none after:content-none",}} containerProps={{className: "min-w-0",}}/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </Card>
+    const [fields, setFields] = useState([
+        { label: "First Name", value: "" },
+        { label: "Last Name", value: "" },
+        { label: "Email", value: "" },
+        { label: "Phone Number", value: "" },
+    ])
+
+    const handleFieldChange = (index, field, value) => {
+        const newFields = fields.map((f, i) => i === index ? { ...f, [field]: value } : f)
+        setFields(newFields)
+    }
+
+    return (
+    <>
+    {fields.map((field, index) => (
+        <div key={index} className="mb-4">
+            <Input
+            label={field.label}
+            autocomplete="none"
+            type="text"
+            value={field.value}
+            onChange={(e) => handleFieldChange(index, "value", e.target.value)}
+            className="mt-1 block w-full"
+            />
+        </div>
+    ))}
+    </>
     )
 }
 

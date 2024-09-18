@@ -28,9 +28,24 @@ function App() {
   const snap = useSnapshot(state)
 
   return (
-    <main className="bg-indigo-50">
+    <main className="bg-indigo-50 flex flex-col w-screen h-screen">
       <Navigation comp_name="navigation" nav_config={Nav_Config} />
-      <Tabs value={snap.activeTab}>
+      <CanvasMain />
+      <Loading />
+      <Footer />
+    </main>
+  )
+}
+
+export default App
+
+
+/**
+ * TODO:
+ * Add map integration
+ * below is inital sample to add one
+ * it's not efficient but it works
+ *       <Tabs value={snap.activeTab}>
         <TabsHeader className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
         indicatorProps={{
           className: "bg-transparent border-b-2 border-blue-gray-900 shadow-none rounded-none",
@@ -53,10 +68,4 @@ function App() {
           </TabPanel>
         </TabsBody>
       </Tabs>
-      <Loading />
-      <Footer />
-    </main>
-  )
-}
-
-export default App
+ */

@@ -5,7 +5,6 @@ import { folder, useControls } from "leva"
 
 import ModelHandler from './ModelHandler'
 import Box from './Box'
-import { color } from 'framer-motion'
 
 const Experience = ({modelContent}) => {
 

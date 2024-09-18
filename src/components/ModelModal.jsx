@@ -5,11 +5,12 @@ import { Typography,
     Dialog,
     DialogHeader,
     DialogBody,
+    DialogFooter,
     Tabs,
     TabsHeader,
     Tab,
     TabsBody,
-    TabPanel} from "@material-tailwind/react"
+    TabPanel, Button} from "@material-tailwind/react"
 
 import ModalTable from "./ModalTable"
 
@@ -56,8 +57,8 @@ const ModelModal = ({open, handleOpen, modelName}) => {
                         <Tab key={"Normal1"} value={"Normal1"} className="text-blue-gray-900">Inspection</Tab>
                         <Tab key={"Normal2"} value={"Normal2"} className="text-blue-gray-900">Code</Tab>
                     </TabsHeader>
-                    <TabsBody>
-                        <TabPanel key={"Normal"} value={"Normal"}>
+                    <TabsBody className="max-h-80 overflow-y-auto">
+                        <TabPanel key={"Normal"} value={"Normal"} className="overflow-y-auto">
                             <ModalTable />
                         </TabPanel>
                         <TabPanel key={"Normal1"} value={"Normal1"}>
@@ -69,6 +70,12 @@ const ModelModal = ({open, handleOpen, modelName}) => {
                     </TabsBody>
                 </Tabs>
             </DialogBody>
+            <DialogFooter>
+                <div className="flex space-x-2">
+                    <Button color="red" ripple="light" onClick={handleOpen}>Cancel</Button>
+                    <Button color="green" ripple="light">Update</Button>
+                </div>
+        </DialogFooter>
         </Dialog>
     </Html>
     )
