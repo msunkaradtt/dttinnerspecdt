@@ -14,11 +14,33 @@ import { Typography,
 
 import ModalTable from "./ModalTable"
 
+/**
+ *
+ * Temoporary
+*/
+const DesignTabParams = [
+    { label: "Design pressure", value: "", units: "Psi"},
+    { label: "Design temperature", value: "", units: "C" },
+    { label: "External diameter", value: "", units: "in" },
+    { label: "Nominal thickness used", value: "", units: "in" },
+    { label: "Mechanical plus corrosion and erosion allowances", value: "", units: "in" },
+    { label: "Longitudinal Efficiency", value: "", units: "E" },
+    { label: "Under tolerance allowance", value: "", units: "in" },
+]
+
+const MaterialTabParams = [
+    { label: "Material", value: "", units: "" },
+    { label: "Minimum yield strength", value: "", units: "Psi" },
+    { label: "Allowable stress value for material", value: "", units: "Psi" },
+    { label: "Coefficient", value: "", units: "" },
+    { label: "Weld joint reduction factor", value: "", units: "" },
+]
+
 const ModelModal = ({open, handleOpen, modelName}) => {
 
     return (
     <Html center>
-        <Dialog size="lg" open={open} handler={handleOpen}>
+        <Dialog size="xs" open={open} handler={handleOpen}>
             <DialogHeader className="justify-between">
                 <div>
                     <Typography variant="h6" color="blue-gray">
@@ -53,27 +75,23 @@ const ModelModal = ({open, handleOpen, modelName}) => {
                     indicatorProps={{
                         className: "bg-transparent border-b-2 border-blue-gray-900 shadow-none rounded-none",
                         }}>
-                        <Tab key={"Normal"} value={"Normal"} className="text-blue-gray-900">Material</Tab>
-                        <Tab key={"Normal1"} value={"Normal1"} className="text-blue-gray-900">Inspection</Tab>
-                        <Tab key={"Normal2"} value={"Normal2"} className="text-blue-gray-900">Code</Tab>
+                        <Tab key={"Normal"} value={"Normal"} className="text-blue-gray-900">Design</Tab>
+                        <Tab key={"Normal1"} value={"Normal1"} className="text-blue-gray-900">Material</Tab>
                     </TabsHeader>
                     <TabsBody className="max-h-80 overflow-y-auto">
-                        <TabPanel key={"Normal"} value={"Normal"} className="overflow-y-auto">
-                            <ModalTable />
+                        <TabPanel key={"Normal"} value={"Normal"}>
+                            <ModalTable params={DesignTabParams} />
                         </TabPanel>
                         <TabPanel key={"Normal1"} value={"Normal1"}>
-                            <ModalTable />
-                        </TabPanel>
-                        <TabPanel key={"Normal2"} value={"Normal2"}>
-                            <ModalTable />
+                            <ModalTable params={MaterialTabParams} />
                         </TabPanel>
                     </TabsBody>
                 </Tabs>
             </DialogBody>
             <DialogFooter>
                 <div className="flex space-x-2">
-                    <Button color="red" ripple="light" onClick={handleOpen}>Cancel</Button>
-                    <Button color="green" ripple="light">Update</Button>
+                    <Button variant="outlined" onClick={handleOpen}>Cancel</Button>
+                    <Button color="blue-gray-900">Update</Button>
                 </div>
         </DialogFooter>
         </Dialog>

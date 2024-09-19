@@ -107,7 +107,7 @@ const Model = (props) => {
         >
             <mesh raycast={() => null} ref={sphere_ref} visible={false}>
                 <sphereGeometry args={[0.0020]} />
-                <meshBasicMaterial color="red" toneMapped={false} />
+                <meshBasicMaterial color="yellow" toneMapped={false} />
             </mesh>
         </mesh>
         </>

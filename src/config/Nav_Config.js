@@ -113,7 +113,7 @@ const Nav_Config = [
       },
       {
         title: "PEC",
-        tip: "Load PEC data on to the model",
+        tip: "Load PEC data on to the model.",
         as: "input",
         type: "file",
         accept: ".csv"
