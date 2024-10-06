@@ -21,7 +21,7 @@ const NavListItem = (props) => {
     }
 
     const itemOnChange = (e, props) => {
-        if(props.type === "file" && props.accept === ".glb") {
+        if(props.type === "file" && props.accept === ".gltf") {
             let inFile = e.target.files[0]
 
             state.selectedInput = inFile.name

@@ -6,7 +6,7 @@ const Nav_Config = [
         tip: "Load new model to the scene.",
         as: "input",
         type: "file",
-        accept: ".glb"
+        accept: ".gltf"
       },
       {
         title: "Save",

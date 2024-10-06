@@ -38,14 +38,14 @@ const pointAngle = (x, y, z) => {
     return Math.round(degrees);
 }
 
-export const mapPECValues = (childGeoPositions) => {
+export const mapPECValues = (GeoPositions) => {
     const mappedValues = []
 
-    for(let i = 0; i < childGeoPositions.array.length; i += 3) {
+    for(let i = 0; i < GeoPositions.array.length; i += 3) {
         const point = {'x': 0.0, 'y': 0.0, 'z': 0.0}
         const pointValues = {'point': [], 'angle': 0}
 
-        const chunk = childGeoPositions.array.slice(i, i + 3)
+        const chunk = GeoPositions.array.slice(i, i + 3)
 
         point.x = chunk[0]
         point.y = chunk[1]
@@ -62,49 +62,99 @@ export const mapPECValues = (childGeoPositions) => {
     return mappedValues
 }
 
-export const pecMapping = (childGeo, sensorValues, segmentData, lut) => {
-    if(!childGeo || !sensorValues) return
+export const mapPECSegments = (GeoPositions, segmentLen) => {
 
-    const colors = childGeo.attributes.color
-    const PECsensorValues = childGeo.attributes.PECsensor
+    let segValue = GeoPositions.count / segmentLen
 
-    for(let i = 0; i < sensorValues.length; i++) {
-        const sensorValue = sensorValues[i].angle
+    let segList = {}
+    if(!Number.isInteger(segValue)) {
+        segValue = Math.floor(segValue)
+    }
 
-        let setValue = 0
-        if(sensorValue >= 0 && sensorValue < 320){
-            setValue = segmentData['0']
+    let segachValue = segValue * segmentLen
+    let segTotal = GeoPositions.count
+    let segEnd = segTotal - segachValue
+
+    let count = 1
+
+    while(count <= segmentLen) {
+        let segKey = 'segment_' + (count - 1)
+        segList[segKey] = segValue * count
+        count++
+    }
+
+    if(segEnd > 0) {
+        segList[Object.keys(segList).pop()] += segEnd
+    }
+
+    return segList
+}
+export const pecMapping = (sensorValues, segmentData, segmentObj, lut) => {
+
+
+    let lastValue = 0
+
+    const colorList = []
+    const sensorValueList = []
+
+    Object.entries(segmentObj).forEach(([key, value]) => {
+
+        let segV = segmentData[key]
+
+        let segSensorValues = sensorValues.slice(lastValue, value)
+
+        for(let i = 0; i < segSensorValues.length; i++) {
+            const sensorValue = segSensorValues[i].angle
+
+            let setValue = 0
+            if(sensorValue >= 0 && sensorValue < 320){
+                setValue = segV['0']
+            }
+
+            if(sensorValue >= 320 && sensorValue < 330){
+                setValue = segV['320']
+            }
+
+            if(sensorValue >= 330 && sensorValue < 340){
+                setValue = segV['330']
+            }
+
+            if(sensorValue >= 340 && sensorValue < 350){
+                setValue = segV['340']
+            }
+
+            if(sensorValue >= 350){
+                setValue = segV['350']
+            }
+
+            if(sensorValue < 0){
+                setValue = segV['0']
+            }
+
+            const color = lut.getColor(setValue)
+
+            if(color === undefined) {
+                console.error("Unable to determine color for value:", sensorValue)
+            } else {
+                colorList.push(color)
+                sensorValueList.push(setValue)
+            }
         }
 
-        if(sensorValue >= 320 && sensorValue < 330){
-            setValue = segmentData['320']
-        }
+        lastValue = value
+    })
 
-        if(sensorValue >= 330 && sensorValue < 340){
-            setValue = segmentData['330']
-        }
+    return {colorList, sensorValueList}
 
-        if(sensorValue >= 340 && sensorValue < 350){
-            setValue = segmentData['340']
-        }
+}
 
-        if(sensorValue >= 350){
-            setValue = segmentData['350']
-        }
+export const applyPECData = (ModelGeo, colorList, sensorValueList) => {
+    const colors = ModelGeo.attributes.color
+    const PECsensorValues = ModelGeo.attributes.PECsensor
 
-        if(sensorValue < 0){
-            setValue = segmentData['0']
-        }
-
-        const color = lut.getColor(setValue)
-
-        PECsensorValues.setX(i, setValue)
-
-        if(color === undefined) {
-            console.error("Unable to determine color for value:", sensorValue)
-        } else {
-            colors.setXYZ(i, color.r, color.g, color.b)
-        }
+    for(let i = 0; i < colorList.length; i++) {
+        colors.setXYZ(i, colorList[i].r, colorList[i].g, colorList[i].b)
+        PECsensorValues.setX(i, sensorValueList[i])
     }
 }
 

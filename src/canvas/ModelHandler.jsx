@@ -8,7 +8,7 @@ import Model from './Model'
 
 import { pecDataFnc } from './modelDataFnc'
 
-import { pecMapping, mapPECValues, addColorAttribute, addPECSensorAttribute } from "./modelFnc"
+import {mapPECValues, addColorAttribute, addPECSensorAttribute, mapPECSegments, pecMapping, applyPECData } from "./modelFnc"
 
 import ToolTipCursor from "./ToolTipCursor"
 import { ModelModal } from "../components"
@@ -18,6 +18,7 @@ Store
 */
 import { useSnapshot } from 'valtio'
 import state from "../store"
+import { m } from 'framer-motion'
 
 const ModelHandler = (props) => {
     const model_ref = useRef()
@@ -71,39 +72,31 @@ const ModelHandler = (props) => {
 
     const { nodes } = useGLTF(props.modelContent)
 
+    const modelMesh = useMemo(() => {
+        return nodes.Created_by_Gmsh
+    }, [nodes])
+
+    const modelGeo = useMemo(() => {
+        return modelMesh.geometry
+    }, [modelMesh])
+
     useEffect(() => {
-        /*
-         * Process the recieved PEC data
-        */
         if(snap.pecDataLoaded){
             const {segmentData, max, min} = pecDataFnc(snap.pecDataJSON)
             set({cm_min: min, cm_max: max})
 
-            delete segmentData['segment_8'] // Please remove it later
+            addColorAttribute(modelGeo, modelGeo.attributes.position.count)
+            addPECSensorAttribute(modelGeo, modelGeo.attributes.position.count)
 
-            const childrenMesh = model_ref.current.children
+            let segmentObj = mapPECSegments(modelGeo.attributes.position, Object.keys(segmentData).length)
 
-            childrenMesh.map((childMesh) => {
-                let childGeo = childMesh.geometry
+            let sensorValues = mapPECValues(modelGeo.attributes.position)
 
-                addColorAttribute(childGeo, childGeo.attributes.position.count)
+            let {colorList, sensorValueList} = pecMapping(sensorValues, segmentData, segmentObj, lut)
 
-                addPECSensorAttribute(childGeo, childGeo.attributes.position.count)
-
-                let sensorValues = mapPECValues(childGeo.attributes.position)
-
-                pecMapping(childGeo, sensorValues, segmentData[childMesh.name], lut)
-            })
+            applyPECData(modelGeo, colorList, sensorValueList)
         }
     }, [snap.pecDataLoaded, snap.pecDataJSON, lut])
-
-    const childComponents = nodes.world.children.map((child, index) => (
-        <Model key={index}
-        modelIndex={index}
-        modelGeo={child.geometry}
-        modelMat={child.material}
-        modelScale={props.modelScale} modelColor={props.modelColor} />
-    ))
 
     return(
         <>
@@ -121,7 +114,7 @@ const ModelHandler = (props) => {
                 dispose={null}
                 onClick={() => setActive(!active)}
                 onContextMenu={() => setShowContextMenu(!showContextMenu)}>
-                    {childComponents}
+                    <Model modelGeo={modelGeo} modelMat={modelMesh.material} modelScale={props.modelScale} modelColor={props.modelColor} />
                 </group>
             </Bvh>
             {showLabels ? <ToolTipCursor /> : null}
@@ -129,7 +122,6 @@ const ModelHandler = (props) => {
         </PivotControls>
         </>
     )
-
 }
 
 export default ModelHandler
