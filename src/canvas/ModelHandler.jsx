@@ -8,7 +8,7 @@ import Model from './Model'
 
 import { pecDataFnc } from './modelDataFnc'
 
-import {mapPECValues, addColorAttribute, addPECSensorAttribute, mapPECSegments, pecMapping, applyPECData } from "./modelFnc"
+import { mapPECValues, addColorAttribute, addPECSensorAttribute, mapPECSegments, pecMapping, applyPECData } from "./modelFnc"
 
 import ToolTipCursor from "./ToolTipCursor"
 import { ModelModal } from "../components"
@@ -18,7 +18,6 @@ Store
 */
 import { useSnapshot } from 'valtio'
 import state from "../store"
-import { m } from 'framer-motion'
 
 const ModelHandler = (props) => {
     const model_ref = useRef()
@@ -73,7 +72,7 @@ const ModelHandler = (props) => {
     const { nodes } = useGLTF(props.modelContent)
 
     const modelMesh = useMemo(() => {
-        return nodes.Created_by_Gmsh
+        return nodes.geometry_0
     }, [nodes])
 
     const modelGeo = useMemo(() => {

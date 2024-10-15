@@ -12,7 +12,9 @@ const state = proxy({
     activeTab: "Normal",
     labelValue: 0.0,
     labelPos: new THREE.Vector3(),
-    labelVis: false
+    labelVis: false,
+    conversion_srv_res: {},
+    isChecking: false,
 });
 
 export default state;

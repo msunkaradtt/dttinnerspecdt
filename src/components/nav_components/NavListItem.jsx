@@ -1,5 +1,7 @@
-import React, {useState} from "react"
+import React from "react"
 import Papa from "papaparse"
+
+import { useToastify } from "../../providers"
 /*
 Store
 */
@@ -8,6 +10,8 @@ import state from "../../store"
 
 const NavListItem = (props) => {
     const snap = useSnapshot(state)
+
+    const notifier = useToastify()
 
     const pageRefocused = () => {
         ++state.closeCounter
@@ -20,7 +24,9 @@ const NavListItem = (props) => {
         window.addEventListener("focus", pageRefocused)
     }
 
-    const itemOnChange = (e, props) => {
+    const itemOnChange = async (e, props) => {
+        e.preventDefault()
+
         if(props.type === "file" && props.accept === ".gltf") {
             let inFile = e.target.files[0]
 
@@ -45,6 +51,39 @@ const NavListItem = (props) => {
                     state.pecDataLoaded = true
                 }
             })
+        }
+
+        if(props.type === "file" && props.accept === ".step") {
+            const inFile = e.target.files[0]
+            const fileSize = Math.round((inFile.size / 1024))
+
+            if(fileSize >= 4096) {
+                notifier.notifyError("Max supported file size is 4mb. Please select a smaller file.")
+                return
+            }
+
+            const formData = new FormData()
+            formData.append("input_step_file", inFile)
+
+            try {
+                const endpoint = "http://localhost:8000/convert/step2gltf/"
+
+                await fetch(endpoint, {
+                    method: "POST",
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    if(!data) {
+                        notifier.notifyError("Error in conversion. Check on server side for more details.")
+                        return
+                    }
+                    state.conversion_srv_res = data
+                    state.isChecking = true
+                })
+
+            } catch (error) {
+                notifier.notifyError(`Conversion server failed with following error: ${error}`)
+                return
+            }
         }
     }
 

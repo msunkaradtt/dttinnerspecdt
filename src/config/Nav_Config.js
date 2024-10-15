@@ -24,10 +24,10 @@ const Nav_Config = [
       },
       {
         title: "Convert",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: "",
-        accept: ""
+        tip: "Convert .step file to .gltf file.",
+        as: "input",
+        type: "file",
+        accept: ".step"
       },
     ]
   },

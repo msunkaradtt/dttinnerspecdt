@@ -8,7 +8,7 @@ import {Nav_Config} from "./config"
 /*
 Components
 */
-import {Navigation, Loading, Footer} from "./components"
+import {Navigation, Loading, Footer, TaskStatusComponent} from "./components"
 import {CanvasMain, CanvasMap} from "./canvas"
 
 /*
@@ -24,17 +24,17 @@ import {
 } from "@material-tailwind/react"
 
 function App() {
-
   const snap = useSnapshot(state)
-
+  const shouldUpdate = snap.conversion_srv_res.status === "Submitted"
   return (
     <main className="bg-indigo-50 flex flex-col w-screen h-screen">
       <Navigation comp_name="navigation" nav_config={Nav_Config} />
+      {shouldUpdate && <TaskStatusComponent />}
       <CanvasMain />
       <Loading />
       <Footer />
     </main>
-  )
+  );
 }
 
 export default App
