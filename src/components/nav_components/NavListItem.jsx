@@ -57,8 +57,8 @@ const NavListItem = (props) => {
             const inFile = e.target.files[0]
             const fileSize = Math.round((inFile.size / 1024))
 
-            if(fileSize >= 4096) {
-                notifier.notifyError("Max supported file size is 4mb. Please select a smaller file.")
+            if(fileSize >= 2096) {
+                notifier.notifyError("Max supported file size is 20mb. Please select a smaller file.")
                 return
             }
 
@@ -66,7 +66,7 @@ const NavListItem = (props) => {
             formData.append("input_step_file", inFile)
 
             try {
-                const endpoint = "http://localhost:8000/convert/step2gltf/"
+                const endpoint = "http://18.153.140.53:8000/convert/step2gltf"
 
                 await fetch(endpoint, {
                     method: "POST",
@@ -91,9 +91,9 @@ const NavListItem = (props) => {
     <>
     <label htmlFor={props.title.split(" ").join("").toLocaleLowerCase() + "_dtt"}
     style={{width:"100%", height:"100%", color: "#263238"}}
-    className="flex items-center text-sm font-bold">{props.title}</label>
+    className="flex w-full items-center text-sm font-bold cursor-pointer">{props.title}</label>
 
-    <input type={props.type} accept={props.accept}
+    <input className="navinput" type={props.type} accept={props.accept}
     id={props.title.split(" ").join("").toLocaleLowerCase() + "_dtt"}
     onClick={(e) => {itemOnClicked(e)}}
     onChange={(e) => {itemOnChange(e, props)}} />

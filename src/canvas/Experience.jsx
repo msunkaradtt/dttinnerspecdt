@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { OrbitControls, Environment, Sky } from "@react-three/drei"
 
 import { folder, useControls } from "leva"
@@ -6,7 +6,16 @@ import { folder, useControls } from "leva"
 import ModelHandler from './ModelHandler'
 import Box from './Box'
 
+import {AIModal} from "../components"
+
+/*
+Store
+*/
+import { useSnapshot } from 'valtio'
+import state from "../store"
+
 const Experience = ({modelContent}) => {
+    const snap = useSnapshot(state)
 
     const { gScale, gColor } = useControls("Object",{
         "Transform": folder({
@@ -36,6 +45,7 @@ const Experience = ({modelContent}) => {
             (
                 <Box modelScale={gScale} modelColor={gColor} />
             )}
+            {snap.showAIModal && <AIModal />}
             <OrbitControls makeDefault rotateSpeed={2} minPolarAngle={0} maxPolarAngle={Math.PI / 1.5} />
         </>
     )

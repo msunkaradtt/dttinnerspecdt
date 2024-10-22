@@ -14,7 +14,7 @@ const TaskStatusComponent = (props) => {
 
   const checkTaskStatus = async () => {
     try {
-      const endpoint = `http://localhost:8000/convert/activetasks/${snap.conversion_srv_res.task_id}`
+      const endpoint = `http://18.153.140.53:8000/convert/activetasks/${snap.conversion_srv_res.task_id}`
       const response = await fetch(endpoint, {
         method: "GET",
       })
@@ -41,7 +41,7 @@ const TaskStatusComponent = (props) => {
 
   const downloadFile = async (fileName) => {
     try {
-      const endpoint = `http://localhost:8000/convert/step2gltfDownload/${fileName}`
+      const endpoint = `http://18.153.140.53:8000/convert/step2gltfDownload/${fileName}`
       const response = await fetch(endpoint, {
         method: "GET"
       })

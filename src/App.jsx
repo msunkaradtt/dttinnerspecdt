@@ -9,7 +9,7 @@ import {Nav_Config} from "./config"
 Components
 */
 import {Navigation, Loading, Footer, TaskStatusComponent} from "./components"
-import {CanvasMain, CanvasMap} from "./canvas"
+import { CanvasMain } from "./canvas"
 
 /*
 Store

@@ -23,17 +23,25 @@ const NavListMenu = (props) => {
 
     const snap = useSnapshot(state)
 
+    const itemOnClicked = (e, as) => {
+        e.preventDefault()
+
+        if(as === "button"){
+            state.showAIModal = true
+        }
+    }
+
     const renderItems = props.nav_data.map(
         (items) => (
             items.map(({title, tip, as, type, accept}, key) => (
-                <div key={key}>
+                <div key={key} className="w-full cursor-not-allowed">
                     <Tooltip content={tip} placement="right-end">
                         <MenuItem className="flex bg-indigo-50 items-center gap-3 rounded-lg">
                             <>
-                            {as === "input" ?
+                            {as === "input"?
                             (<NavListItem title={title} type={type} accept={accept} />)
                             :
-                            (<Typography variant="h6" color="blue-gray" className="flex items-center text-sm font-bold">{title}</Typography>)}
+                            (<Typography variant="h6" color="blue-gray" className={`flex w-full items-center text-sm font-bold ${as === "button" ? "cursor-pointer" :"opacity-60 cursor-not-allowed"}`} onClick={(e) => {itemOnClicked(e, as)}}>{title}</Typography>)}
                             </>
                         </MenuItem>
                     </Tooltip>

@@ -3,11 +3,13 @@ import Loading from "./Loading"
 import Footer from "./Footer"
 import ModelModal from "./ModelModal"
 import TaskStatusComponent from "./TaskStatusComponent"
+import AIModal from "./AIModal"
 
 export {
     Navigation,
     Loading,
     Footer,
     ModelModal,
-    TaskStatusComponent
+    TaskStatusComponent,
+    AIModal
 }

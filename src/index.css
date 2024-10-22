@@ -15,7 +15,7 @@ body,
     padding: 0;
 }
 
-input[type=file]{
+.navinput{
     width: 0;
     height: 0;
     z-index: -1;

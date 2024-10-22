@@ -189,6 +189,13 @@ const Nav_Config = [
         type: "",
         accept: ""
       },
+      {
+        title: "Predictions",
+        tip: "Lanuch AI based prediction models.",
+        as: "button",
+        type: "na",
+        accept: "na"
+      }
     ]
   }
 ]

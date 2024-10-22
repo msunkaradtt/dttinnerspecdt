@@ -15,6 +15,7 @@ const state = proxy({
     labelVis: false,
     conversion_srv_res: {},
     isChecking: false,
+    showAIModal: false
 });
 
 export default state;

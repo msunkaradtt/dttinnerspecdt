@@ -19,21 +19,21 @@ import ModalTable from "./ModalTable"
  * Temoporary
 */
 const DesignTabParams = [
-    { label: "Design pressure", value: "", units: "Psi"},
-    { label: "Design temperature", value: "", units: "C" },
-    { label: "External diameter", value: "", units: "in" },
-    { label: "Nominal thickness used", value: "", units: "in" },
-    { label: "Mechanical plus corrosion and erosion allowances", value: "", units: "in" },
-    { label: "Longitudinal Efficiency", value: "", units: "E" },
-    { label: "Under tolerance allowance", value: "", units: "in" },
+    { label: "Design pressure", value: "", units: "Psi", type: "text"},
+    { label: "Design temperature", value: "", units: "C", type: "text"},
+    { label: "External diameter", value: "", units: "in", type: "text"},
+    { label: "Nominal thickness used", value: "", units: "in", type: "text"},
+    { label: "Mechanical plus corrosion and erosion allowances", value: "", units: "in", type: "text"},
+    { label: "Longitudinal Efficiency", value: "", units: "E", type: "text"},
+    { label: "Under tolerance allowance", value: "", units: "in", type: "text"},
 ]
 
 const MaterialTabParams = [
-    { label: "Material", value: "", units: "" },
-    { label: "Minimum yield strength", value: "", units: "Psi" },
-    { label: "Allowable stress value for material", value: "", units: "Psi" },
-    { label: "Coefficient", value: "", units: "" },
-    { label: "Weld joint reduction factor", value: "", units: "" },
+    { label: "Material", value: "", units: "", type: "dropdown"},
+    { label: "Minimum yield strength", value: "", units: "Psi", type: "text"},
+    { label: "Allowable stress value for material", value: "", units: "Psi", type: "text"},
+    { label: "Coefficient", value: "", units: "", type: "text"},
+    { label: "Weld joint reduction factor", value: "", units: "", type: "text"},
 ]
 
 const ModelModal = ({open, handleOpen, modelName}) => {
@@ -68,7 +68,7 @@ const ModelModal = ({open, handleOpen, modelName}) => {
                     </svg>
                 </IconButton>
             </DialogHeader>
-            <DialogBody>
+            <DialogBody divider className="h-96 overflow-y-auto">
                 <Tabs value="Normal">
                     <TabsHeader
                     className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
@@ -78,7 +78,7 @@ const ModelModal = ({open, handleOpen, modelName}) => {
                         <Tab key={"Normal"} value={"Normal"} className="text-blue-gray-900">Design</Tab>
                         <Tab key={"Normal1"} value={"Normal1"} className="text-blue-gray-900">Material</Tab>
                     </TabsHeader>
-                    <TabsBody className="max-h-80 overflow-y-auto">
+                    <TabsBody>
                         <TabPanel key={"Normal"} value={"Normal"}>
                             <ModalTable params={DesignTabParams} />
                         </TabPanel>
