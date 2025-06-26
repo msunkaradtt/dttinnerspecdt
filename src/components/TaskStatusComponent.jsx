@@ -14,7 +14,7 @@ const TaskStatusComponent = (props) => {
 
   const checkTaskStatus = async () => {
     try {
-      const endpoint = snap.isLocal ? `http://localhost:8000/convert/activetasks/${snap.conversion_srv_res.task_id}` : `http://18.153.140.53:8000/convert/activetasks/${snap.conversion_srv_res.task_id}`
+      const endpoint = snap.isLocal ? `http://localhost:8000/convert/activetasks/${snap.conversion_srv_res.task_id}` : `https://symalysis.digitaltwin.technology/api/v1/convert/activetasks/${snap.conversion_srv_res.task_id}`
       const response = await fetch(endpoint, {
         method: "GET",
       })
@@ -41,7 +41,7 @@ const TaskStatusComponent = (props) => {
 
   const downloadFile = async (fileName) => {
     try {
-      const endpoint = snap.isLocal ? `http://localhost:8000/convert/step2gltfDownload/${fileName}` : `http://18.153.140.53:8000/convert/step2gltfDownload/${fileName}`
+      const endpoint = snap.isLocal ? `http://localhost:8000/convert/step2gltfDownload/${fileName}` : `https://symalysis.digitaltwin.technology/api/v1/convert/step2gltfDownload/${fileName}`
       const response = await fetch(endpoint, {
         method: "GET"
       })

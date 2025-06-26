@@ -18,7 +18,7 @@ const state = proxy({
     conversion_srv_res: {},
     isChecking: false,
     showAIModal: false,
-    isLocal: true /** Remove later */
+    isLocal: false /** Remove later */
 });
 
 export default state;

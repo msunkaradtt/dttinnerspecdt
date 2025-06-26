@@ -78,7 +78,7 @@ const NavListItem = (props) => {
             formData.append("input_step_file", inFile)
 
             try {
-                const endpoint = snap.isLocal ? "http://localhost:8000/convert/step2gltf" : "http://18.153.140.53:8000/convert/step2gltf"
+                const endpoint = snap.isLocal ? "http://localhost:8000/convert/step2gltf" : "https://symalysis.digitaltwin.technology/api/v1/convert/step2gltf"
 
                 await fetch(endpoint, {
                     method: "POST",
