@@ -13,6 +13,7 @@ import { Typography,
     TabPanel, Button} from "@material-tailwind/react"
 
 import AITable from "./AITable"
+import OllamaTable from "./OllamaTable"
 
 /*
 Store
@@ -38,11 +39,11 @@ const AIModal = (props) => {
 
     return (
     <Html center>
-        <Dialog size="xs" open={snap.showAIModal} handler={handleOpen}>
+        <Dialog size="md" open={snap.showAIModal} handler={handleOpen}>
             <DialogHeader className="justify-between">
                 <div>
                     <Typography variant="h6" color="blue-gray">
-                        {"Preductions"}
+                        {"AI Corner"}
                     </Typography>
                 </div>
                 <IconButton
@@ -72,10 +73,16 @@ const AIModal = (props) => {
                         <Tab key={"Normal"} value={"Normal"} className="text-blue-gray-900">
                             Preduction Modals
                         </Tab>
+                        <Tab key={"Normal1"} value={"Normal1"} className="text-blue-gray-900">
+                            DTT Ollama 🤖
+                        </Tab>
                     </TabsHeader>
                     <TabsBody>
                         <TabPanel key={"Normal"} value={"Normal"}>
                             <AITable />
+                        </TabPanel>
+                        <TabPanel key={"Normal1"} value={"Normal1"}>
+                            <OllamaTable />
                         </TabPanel>
                     </TabsBody>
                 </Tabs>

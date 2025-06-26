@@ -42,22 +42,34 @@ const NavListItem = (props) => {
         }
 
         if(props.type === "file" && props.accept === ".csv") {
-            let inFile = e.target.files[0]
-            Papa.parse(inFile, {
-                header: true,
-                complete: (results) => {
-                    const data = results.data
-                    state.pecDataJSON = data
-                    state.pecDataLoaded = true
-                }
-            })
+            const inFile = e.target.files[0]
+            const fileName = inFile.name.split('.').slice(0, -1).join('.')
+            if (fileName === "PEC") {
+                Papa.parse(inFile, {
+                    header: true,
+                    complete: (results) => {
+                        const data = results.data
+                        state.pecDataJSON = data
+                        state.pecDataLoaded = true
+                    }
+                })
+            } else if (fileName === "LRUT") {
+                Papa.parse(inFile, {
+                    header: true,
+                    complete: (results) => {
+                        const data = results.data
+                        state.lrutDataJSON = data
+                        state.lrutDataLoaded = true
+                    }
+                })
+            }
         }
 
         if(props.type === "file" && props.accept === ".step") {
             const inFile = e.target.files[0]
             const fileSize = Math.round((inFile.size / 1024))
 
-            if(fileSize >= 2096) {
+            if(fileSize >= 21096) {
                 notifier.notifyError("Max supported file size is 20mb. Please select a smaller file.")
                 return
             }
@@ -66,7 +78,7 @@ const NavListItem = (props) => {
             formData.append("input_step_file", inFile)
 
             try {
-                const endpoint = "http://18.153.140.53:8000/convert/step2gltf"
+                const endpoint = snap.isLocal ? "http://localhost:8000/convert/step2gltf" : "http://18.153.140.53:8000/convert/step2gltf"
 
                 await fetch(endpoint, {
                     method: "POST",

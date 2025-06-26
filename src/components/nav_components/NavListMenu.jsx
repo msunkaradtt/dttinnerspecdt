@@ -36,7 +36,7 @@ const NavListMenu = (props) => {
             items.map(({title, tip, as, type, accept}, key) => (
                 <div key={key} className="w-full cursor-not-allowed">
                     <Tooltip content={tip} placement="right-end">
-                        <MenuItem className="flex bg-indigo-50 items-center gap-3 rounded-lg">
+                        <MenuItem className="flex items-center gap-3 rounded-lg">
                             <>
                             {as === "input"?
                             (<NavListItem title={title} type={type} accept={accept} />)

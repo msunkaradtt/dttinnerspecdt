@@ -106,10 +106,10 @@ const Nav_Config = [
     Inspection: [
       {
         title: "LRUT",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: "",
-        accept: ""
+        tip: "Load LRUT data on to the model.",
+        as: "input",
+        type: "file",
+        accept: ".csv"
       },
       {
         title: "PEC",
@@ -190,8 +190,8 @@ const Nav_Config = [
         accept: ""
       },
       {
-        title: "Predictions",
-        tip: "Lanuch AI based prediction models.",
+        title: "AI Corner",
+        tip: "Lanuch AI based prediction and support models.",
         as: "button",
         type: "na",
         accept: "na"

@@ -19,6 +19,14 @@ export const pecDataFnc = (data) => {
     return {segmentData, max, min}
 }
 
+export const lrutDataFnc = (data) => {
+    const lrutData = data
+    let ind1 = lrutData[1]
+    let axialloc = ind1["1000mm"]
+
+    return axialloc
+}
+
 
 const pecMaxMinFnc = (data) => {
     let max = -Infinity;

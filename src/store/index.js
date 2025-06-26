@@ -8,6 +8,8 @@ const state = proxy({
     slectedInputContent: "",
     pecDataLoaded: false,
     pecDataJSON: "",
+    lrutDataLoaded: false,
+    lrutDataJSON: "",
     maptilerkey: "vz9DhE2ANYaSbfzjJpye",
     activeTab: "Normal",
     labelValue: 0.0,
@@ -15,7 +17,8 @@ const state = proxy({
     labelVis: false,
     conversion_srv_res: {},
     isChecking: false,
-    showAIModal: false
+    showAIModal: false,
+    isLocal: true /** Remove later */
 });
 
 export default state;

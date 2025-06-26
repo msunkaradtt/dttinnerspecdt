@@ -17,6 +17,219 @@ export const hexToRGB = hex => {
     )
 }
 
+export const divideModel = (fullModelGeo, segments) => {
+    const positions = fullModelGeo.attributes.position.array
+    const normals = fullModelGeo.attributes.normal.array
+
+    const indices = fullModelGeo.index.array
+
+    let minZ = Infinity
+    let maxZ = -Infinity
+
+    for (let i = 0; i < positions.length; i += 3) {
+        const z = positions[i + 2]
+        minZ = Math.min(minZ, z)
+        maxZ = Math.max(maxZ, z)
+    }
+
+    console.log(minZ)
+    console.log(maxZ)
+
+    const zRange = maxZ - minZ
+    console.log(zRange)
+    const segmentDepth = zRange / segments
+    console.log(segmentDepth)
+
+    const groups = Array.from({ length: segments }, () => ({
+        positions: [],
+        normals: [],
+        indices: [],
+    }))
+
+    const vertexMaps = groups.map(() => new Map())
+
+    for (let i = 0; i < indices.length; i += 3) {
+        const idx = [indices[i], indices[i + 1], indices[i + 2]]
+        const zValues = idx.map((vertexIndex) => positions[vertexIndex * 3 + 2])
+
+        // Instead of requiring they all match, pick a segment based on average z.
+        const avgZ = (zValues[0] + zValues[1] + zValues[2]) / 3
+        let groupIndex = Math.floor((avgZ - minZ) / segmentDepth)
+        // Clamp to [0, segments - 1]
+        groupIndex = Math.max(0, Math.min(groupIndex, segments - 1))
+
+        const group = groups[groupIndex];
+        const vertexMap = vertexMaps[groupIndex]
+
+        const newIndices = idx.map((vertexIndex) => {
+            if (!vertexMap.has(vertexIndex)) {
+                const position = positions.slice(vertexIndex * 3, vertexIndex * 3 + 3);
+                group.positions.push(...position)
+
+                const normal = normals.slice(vertexIndex * 3, vertexIndex * 3 + 3)
+                group.normals.push(...normal)
+
+                const newIndex = group.positions.length / 3 - 1;
+                vertexMap.set(vertexIndex, newIndex)
+                return newIndex
+            }
+            else {
+                return vertexMap.get(vertexIndex)
+            }
+        })
+
+        group.indices.push(...newIndices)
+    }
+
+    return groups
+}
+
+export function divideModelByZCuts(fullModelGeo, segmentDepths) {
+    const positions = fullModelGeo.attributes.position.array;
+    const normals   = fullModelGeo.attributes.normal.array;
+    const indices   = fullModelGeo.index.array;
+
+    let minZ = Infinity;
+    let maxZ = -Infinity;
+
+    for (let i = 0; i < positions.length; i += 3) {
+        const z = positions[i + 2];
+        if (z < minZ) minZ = z;
+        if (z > maxZ) maxZ = z;
+    }
+
+    const zRange = maxZ - minZ
+
+    let depthsArray = Array.isArray(segmentDepths) ? [...segmentDepths] : [];
+
+    if (!Array.isArray(segmentDepths)) {
+        const singleDepth = segmentDepths;
+        if (singleDepth <= 0) {
+            throw new Error("Segment depth must be > 0.");
+        }
+
+        let sum = 0;
+        while (sum + singleDepth < zRange) {
+            depthsArray.push(singleDepth);
+            sum += singleDepth;
+        }
+
+        // leftover if there's any
+        if (sum < zRange) {
+            depthsArray.push(zRange - sum);
+        }
+    }
+    else {
+        const sumOfDepths = depthsArray.reduce((acc, d) => acc + d, 0);
+
+        if (sumOfDepths < zRange) {
+            depthsArray.push(zRange - sumOfDepths);
+        }
+
+        else if (sumOfDepths > zRange) {
+            // Example: clamp the last segment so total = zRange
+            let running = 0;
+            for (let i = 0; i < depthsArray.length; i++) {
+                if (running + depthsArray[i] > zRange) {
+                    // clamp
+                    depthsArray[i] = zRange - running;
+                    // discard subsequent segments
+                    depthsArray = depthsArray.slice(0, i + 1);
+                    break;
+                } else {
+                    running += depthsArray[i];
+                }
+            }
+        }
+    }
+
+    const segmentCount = depthsArray.length;
+
+    const segmentRanges = [];
+    {
+        let currentZ = minZ;
+        for (let i = 0; i < segmentCount; i++) {
+            const startZ = currentZ;
+            const endZ   = currentZ + depthsArray[i];
+            segmentRanges.push([startZ, endZ]);
+            currentZ = endZ;
+        }
+    }
+
+    const groups = Array.from({ length: segmentCount }, () => ({
+        positions: [],
+        normals: [],
+        indices: [],
+    }));
+
+    const vertexMaps = groups.map(() => new Map());
+
+    for (let i = 0; i < indices.length; i += 3) {
+        const i0 = indices[i + 0];
+        const i1 = indices[i + 1];
+        const i2 = indices[i + 2];
+
+        const z0 = positions[i0 * 3 + 2];
+        const z1 = positions[i1 * 3 + 2];
+        const z2 = positions[i2 * 3 + 2];
+
+        const avgZ = (z0 + z1 + z2) / 3;
+
+        let groupIndex = 0; // default
+        for (let s = 0; s < segmentRanges.length; s++) {
+            const [rangeStart, rangeEnd] = segmentRanges[s];
+            if (avgZ >= rangeStart && avgZ <= rangeEnd) {
+                groupIndex = s;
+                break;
+            }
+        }
+
+        const group = groups[groupIndex];
+        const vertexMap = vertexMaps[groupIndex];
+
+        const newIndices = [i0, i1, i2].map((origVIdx) => {
+            if (!vertexMap.has(origVIdx)) {
+                // push position
+                const px = positions[origVIdx * 3 + 0];
+                const py = positions[origVIdx * 3 + 1];
+                const pz = positions[origVIdx * 3 + 2];
+                group.positions.push(px, py, pz);
+
+                // push normal
+                const nx = normals[origVIdx * 3 + 0];
+                const ny = normals[origVIdx * 3 + 1];
+                const nz = normals[origVIdx * 3 + 2];
+                group.normals.push(nx, ny, nz);
+
+                // the new index in this group's arrays
+                const newIndex = (group.positions.length / 3) - 1;
+                vertexMap.set(origVIdx, newIndex);
+                return newIndex;
+            } else {
+                // already mapped
+                return vertexMap.get(origVIdx);
+            }
+        });
+
+        // Push the indices for this triangle
+        group.indices.push(...newIndices);
+    }
+
+    return groups;
+}
+
+export const generateChildren = (groups) => {
+    const childGeo = groups.map((group) => {
+        const geometry = new THREE.BufferGeometry()
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(group.positions, 3))
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(group.normals, 3))
+        geometry.setIndex(group.indices)
+        return geometry
+    })
+
+    return childGeo
+}
+
 export const addColorAttribute = (childGeo, lenPositions) => {
     const defaultColor = new Float32Array(lenPositions * 3)
     defaultColor.fill(1)
@@ -62,99 +275,73 @@ export const mapPECValues = (GeoPositions) => {
     return mappedValues
 }
 
-export const mapPECSegments = (GeoPositions, segmentLen) => {
+export const mapLRUTValues = (lrutPositions, lookAxial) => {
+    const point = {'x': 0.0, 'y': 0.0, 'z': 0.0}
+    const pointValues = {'point': [], 'angle': 0}
 
-    let segValue = GeoPositions.count / segmentLen
+    for(let i = 0; i < lrutPositions.array.length; i += 3) {
 
-    let segList = {}
-    if(!Number.isInteger(segValue)) {
-        segValue = Math.floor(segValue)
+        const chunk = lrutPositions.array.slice(i, i + 3)
+
+        point.x = chunk[0]
+        point.y = chunk[1]
+        point.z = chunk[2]
+
+        let getpointAngle = pointAngle(point.x, point.y, point.z)
+
+        if(getpointAngle === lookAxial){
+            pointValues.point = chunk
+            pointValues.angle = getpointAngle
+            break
+        }
     }
 
-    let segachValue = segValue * segmentLen
-    let segTotal = GeoPositions.count
-    let segEnd = segTotal - segachValue
-
-    let count = 1
-
-    while(count <= segmentLen) {
-        let segKey = 'segment_' + (count - 1)
-        segList[segKey] = segValue * count
-        count++
-    }
-
-    if(segEnd > 0) {
-        segList[Object.keys(segList).pop()] += segEnd
-    }
-
-    return segList
+    return pointValues
 }
-export const pecMapping = (sensorValues, segmentData, segmentObj, lut) => {
 
+export const pecMappingOld = (childGeo, sensorValues, segmentData, lut) => {
+    if(!childGeo || !sensorValues) return
 
-    let lastValue = 0
+    const colors = childGeo.attributes.color
+    const PECsensorValues = childGeo.attributes.PECsensor
 
-    const colorList = []
-    const sensorValueList = []
+    for(let i = 0; i < sensorValues.length; i++) {
+        const sensorValue = sensorValues[i].angle
 
-    Object.entries(segmentObj).forEach(([key, value]) => {
-
-        let segV = segmentData[key]
-
-        let segSensorValues = sensorValues.slice(lastValue, value)
-
-        for(let i = 0; i < segSensorValues.length; i++) {
-            const sensorValue = segSensorValues[i].angle
-
-            let setValue = 0
-            if(sensorValue >= 0 && sensorValue < 320){
-                setValue = segV['0']
-            }
-
-            if(sensorValue >= 320 && sensorValue < 330){
-                setValue = segV['320']
-            }
-
-            if(sensorValue >= 330 && sensorValue < 340){
-                setValue = segV['330']
-            }
-
-            if(sensorValue >= 340 && sensorValue < 350){
-                setValue = segV['340']
-            }
-
-            if(sensorValue >= 350){
-                setValue = segV['350']
-            }
-
-            if(sensorValue < 0){
-                setValue = segV['0']
-            }
-
-            const color = lut.getColor(setValue)
-
-            if(color === undefined) {
-                console.error("Unable to determine color for value:", sensorValue)
-            } else {
-                colorList.push(color)
-                sensorValueList.push(setValue)
-            }
+        let setValue = 0
+        if(sensorValue >= 0 && sensorValue < 320){
+            setValue = segmentData['0']
         }
 
-        lastValue = value
-    })
+        if(sensorValue >= 320 && sensorValue < 330){
+            setValue = segmentData['320']
+        }
 
-    return {colorList, sensorValueList}
+        if(sensorValue >= 330 && sensorValue < 340){
+            setValue = segmentData['330']
+        }
 
-}
+        if(sensorValue >= 340 && sensorValue < 350){
+            setValue = segmentData['340']
+        }
 
-export const applyPECData = (ModelGeo, colorList, sensorValueList) => {
-    const colors = ModelGeo.attributes.color
-    const PECsensorValues = ModelGeo.attributes.PECsensor
+        if(sensorValue >= 350){
+            setValue = segmentData['350']
+        }
 
-    for(let i = 0; i < colorList.length; i++) {
-        colors.setXYZ(i, colorList[i].r, colorList[i].g, colorList[i].b)
-        PECsensorValues.setX(i, sensorValueList[i])
+        if(sensorValue < 0){
+            setValue = segmentData['0']
+        }
+
+        const color = lut.getColor(setValue)
+
+        PECsensorValues.setX(i, setValue)
+
+        if(color === undefined) {
+            console.error("Unable to determine color for value:", sensorValue)
+        } else {
+            colors.setXYZ(i, color.r, color.g, color.b)
+        }
     }
 }
 

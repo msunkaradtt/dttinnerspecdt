@@ -27,7 +27,7 @@ function App() {
   const snap = useSnapshot(state)
   const shouldUpdate = snap.conversion_srv_res.status === "Submitted"
   return (
-    <main className="bg-indigo-50 flex flex-col w-screen h-screen">
+    <main className="flex flex-col w-screen h-screen">
       <Navigation comp_name="navigation" nav_config={Nav_Config} />
       {shouldUpdate && <TaskStatusComponent />}
       <CanvasMain />

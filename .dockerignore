@@ -7,3 +7,4 @@ note.txt
 stepzen.config.json
 .env
 docker-compose.yml
+ssh/*

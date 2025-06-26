@@ -4,6 +4,7 @@ import Footer from "./Footer"
 import ModelModal from "./ModelModal"
 import TaskStatusComponent from "./TaskStatusComponent"
 import AIModal from "./AIModal"
+import ZoomableScale from "./ZoomableScale"
 
 export {
     Navigation,
@@ -11,5 +12,6 @@ export {
     Footer,
     ModelModal,
     TaskStatusComponent,
-    AIModal
+    AIModal,
+    ZoomableScale
 }

@@ -4,6 +4,8 @@ import { GizmoHelper, GizmoViewport } from "@react-three/drei"
 
 import Experience from './Experience'
 
+//import { ZoomableScale } from "../components"
+
 /*
 Store
 */
@@ -19,6 +21,7 @@ const CanvasMain = () => {
         <Suspense fallback={null}>
             <Experience modelContent={snap.slectedInputContent} />
         </Suspense>
+        {/*<ZoomableScale />*/}
         <gridHelper />
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
             <GizmoViewport labelColor="white" axisHeadScale={1} />

@@ -76,10 +76,10 @@ const Model = (props) => {
     }
 
     return(
-        <>
         <mesh
         ref={mesh_ref}
         {...props}
+        name={props.segmentName}
         castShadow
         receiveShadow
         geometry={props.modelGeo}
@@ -109,7 +109,6 @@ const Model = (props) => {
                 <meshBasicMaterial color="yellow" toneMapped={false} />
             </mesh>
         </mesh>
-        </>
     )
 }
 

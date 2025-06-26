@@ -23,6 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+ssh/*
+
 .env
 note.txt
 services/*

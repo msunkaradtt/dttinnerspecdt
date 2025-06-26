@@ -13,6 +13,7 @@ const ModalTable = (props) => {
                         <input
                         type="text"
                         className="px-3 py-2 border border-blue-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-gray-900"
+                        value={field.value}
                         />
                         <label htmlFor="sideLabelTextInput" className="text-blue-gray-900">{field.units}</label>
                     </div>
