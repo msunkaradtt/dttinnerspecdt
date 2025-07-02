@@ -82,10 +82,10 @@ const ModelHandler = (props) => {
 
     const { nodes } = useGLTF(props.modelContent)
 
-    /*console.log(nodes)*/
+    console.log(nodes)
 
     const modelMesh = useMemo(() => {
-        return nodes.geometry_0
+        return nodes.Mesh1
     }, [nodes])
 
     const modelGeo = useMemo(() => {
