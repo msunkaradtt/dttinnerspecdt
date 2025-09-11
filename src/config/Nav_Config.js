@@ -24,10 +24,10 @@ const Nav_Config = [
       },
       {
         title: "Convert",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: "",
-        accept: ""
+        tip: "Convert .step file to .gltf file.",
+        as: "input",
+        type: "file",
+        accept: ".step"
       },
     ]
   },
@@ -106,16 +106,17 @@ const Nav_Config = [
     Inspection: [
       {
         title: "LRUT",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: "",
-        accept: ""
+        tip: "Load LRUT data on to the model.",
+        as: "input",
+        type: "file",
+        accept: ".csv"
       },
       {
         title: "PEC",
-        tip: "Load new model to scene.",
-        as: "div",
-        type: ""
+        tip: "Load PEC data on to the model.",
+        as: "input",
+        type: "file",
+        accept: ".csv"
       },
       {
         title: "Corrsense",
@@ -188,6 +189,13 @@ const Nav_Config = [
         type: "",
         accept: ""
       },
+      {
+        title: "AI Corner",
+        tip: "Lanuch AI based prediction and support models.",
+        as: "button",
+        type: "na",
+        accept: "na"
+      }
     ]
   }
 ]

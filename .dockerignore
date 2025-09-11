@@ -1,0 +1,10 @@
+node_modules/*
+postgresql/*
+services/*
+
+index.graphql
+note.txt
+stepzen.config.json
+.env
+docker-compose.yml
+ssh/*

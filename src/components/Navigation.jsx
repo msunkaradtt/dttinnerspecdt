@@ -6,23 +6,26 @@ import {
 
 import NavList from "./NavList"
 
+import { logoCuidetect } from "../assets"
+
 const Navigation = (props) => {
 
     return(
-        <Navbar className="mx-auto max-w-screen-xl px-4 py-2">
+        <div className="w-scree">
             <div className="flex items-center justify-between text-blue-gray-900">
                 <Typography
                 as="a"
                 href="/"
-                variant="h6"
-                className="mr-4 cursor-pointer text-2xl py-1.5 lg:ml-2">
-                    Culdetect
-                </Typography>
+                className="mr-4 cursor-pointer py-1.5 lg:ml-2 text-2xl font-bold"
+                >
+                    Symalysis
+                </Typography
+                >
                 <div className="lg:block">
                     <NavList nav_config={props.nav_config} />
                 </div>
             </div>
-        </Navbar>
+        </div>
     )
 }
 

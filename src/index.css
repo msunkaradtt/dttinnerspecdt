@@ -15,11 +15,35 @@ body,
     padding: 0;
 }
 
-input[type=file]{
+.navinput{
     width: 0;
     height: 0;
     z-index: -1;
     position: absolute;
     overflow: hidden;
     opacity: 0;
+}
+
+.content {
+    transform: translate3d(calc(50% + 40px), 0, 0);
+}
+
+.annotation {
+    transform: translate3d(calc(50%), calc(-50%), 0);
+    text-align: left;
+    background: #181c20;
+    color: #8c92a4;
+    padding: 10px 15px;
+    border-radius: 5px;
+    user-select: none;
+}
+
+.annotation::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -30px;
+    height: 2px;
+    width: 30px;
+    background: #181c20;
 }
