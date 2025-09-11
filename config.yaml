@@ -1,4 +1,0 @@
-configurationset:
-  - configuration:
-      name: postgresql_config
-      uri: postgresql://host.docker.internal:5432/culdetectdigitaltwin?user=culdetect&password=culdetect01
