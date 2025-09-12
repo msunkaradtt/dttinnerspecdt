@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.11.2-slim-buster
+FROM python:3.13.7-slim
 
 # set work directory
 WORKDIR /code/app
@@ -9,7 +9,15 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # install dependencies
-RUN apt update -y && apt install -y libxrender1 libglu1 libxcursor1 libxft2 libxinerama1 libgomp1
+RUN apt update -y && apt install -y \
+    libxrender1 \
+    libglu1-mesa \
+    libxcursor1 \
+    libxft2 \
+    libxinerama1 \
+    libgomp1 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p uploads
 RUN pip install --upgrade pip

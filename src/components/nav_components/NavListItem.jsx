@@ -65,7 +65,7 @@ const NavListItem = (props) => {
             }
         }
 
-        if(props.type === "file" && props.accept === ".step") {
+        if(props.type === "file" && props.accept === ".step" || props.accept === ".fbx") {
             const inFile = e.target.files[0]
             const fileSize = Math.round((inFile.size / 1024))
 
@@ -75,11 +75,17 @@ const NavListItem = (props) => {
             }
 
             const formData = new FormData()
-            formData.append("input_step_file", inFile)
+            let endpoint = ""
+
+            if(props.accept === ".step") {
+                formData.append("input_step_file", inFile)
+                endpoint = snap.isLocal ? "http://localhost:8000/convert/step2gltf" : "https://symalysis.digitaltwin.technology/api/v1/convert/step2gltf"
+            } else if(props.accept === ".fbx") {
+                formData.append("input_fbx_file", inFile)
+                endpoint = snap.isLocal ? "http://localhost:8000/convert/fbx2gltf" : "https://symalysis.digitaltwin.technology/api/v1/convert/fbx2gltf"
+            }
 
             try {
-                const endpoint = snap.isLocal ? "http://localhost:8000/convert/step2gltf" : "https://symalysis.digitaltwin.technology/api/v1/convert/step2gltf"
-
                 await fetch(endpoint, {
                     method: "POST",
                     body: formData

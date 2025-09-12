@@ -1,0 +1,64 @@
+volumes:
+  app-uploads:
+    name: app-uploads
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  step2gltf:
+    build:
+      context: services/convertor
+      dockerfile: Dockerfile 
+    container_name: step2gltf
+    ports:
+      - "8000:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - app-uploads:/code/app/uploads
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  worker:
+    build:
+      context: services/convertor
+      dockerfile: Dockerfile
+    container_name: worker
+    command: celery -A worker.celery worker --pool=solo
+    volumes:
+      - app-uploads:/code/app/uploads
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      - step2gltf
+    networks:
+      - app-network
+
+  cuidetectweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cuidetectweb
+    ports:
+      - "5173:5173"
+    depends_on:
+      - step2gltf
+    networks:
+      - app-network

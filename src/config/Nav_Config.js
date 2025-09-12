@@ -23,11 +23,18 @@ const Nav_Config = [
         accept: ""
       },
       {
-        title: "Convert",
+        title: "STEP to GLTF",
         tip: "Convert .step file to .gltf file.",
         as: "input",
         type: "file",
         accept: ".step"
+      },
+      {
+        title: "FBX to GLTF",
+        tip: "Convert .fbx file to .gltf file.",
+        as: "input",
+        type: "file",
+        accept: ".fbx"
       },
     ]
   },

@@ -9,7 +9,7 @@ import os
 import shutil
 from pathlib import Path
 
-from worker import celery, step2gltf_task
+from worker import celery, step2gltf_task, fbx2gltf_task
 from celery.result import AsyncResult
 
 
@@ -46,6 +46,22 @@ def convert_step2gltf(input_step_file: UploadFile):
     task = step2gltf_task.delay(input_step_file.filename, output_file_name)
 
     return {"task_id": task.id, "status": "Submitted", "filename": input_step_file.filename}
+
+@app.post("/convert/fbx2gltf", status_code=201)
+def convert_fbx2gltf(input_fbx_file: UploadFile):
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now()
+    output_file_name = f"dttconv_fbx2gltf_{now.strftime('%d-%m-%Y_%H-%M-%S')}"
+
+    save_to = UPLOAD_DIR / input_fbx_file.filename
+
+    with save_to.open("wb") as f:
+        shutil.copyfileobj(input_fbx_file.file, f)
+
+    task = fbx2gltf_task.delay(input_fbx_file.filename, output_file_name)
+
+    return {"task_id": task.id, "status": "Submitted", "filename": input_fbx_file.filename}
 
 @app.get("/convert/step2gltfDownload/{fileName}")
 def download_step2gltf(fileName):

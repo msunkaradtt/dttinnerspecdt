@@ -101,3 +101,20 @@ def step2gltf_task(input_file, output_file_name):
         return {'status': 'Conversion complete', 'output_file': output_file_name + ".gltf"}
     except Exception as e:
         return {'status': 'Conversion failed'}
+
+@celery.task(name="fbx2gltf_task")
+def fbx2gltf_task(input_file, output_file_name):
+    path = os.getcwd()
+    inputFile = path + "/uploads/" + input_file
+    outFile = path + "/uploads/" + output_file_name + ".gltf"
+
+    try:
+        # Load the FBX file
+        mesh = trimesh.load(inputFile, file_type='fbx')
+
+        # Export to glTF
+        mesh.export(outFile, 'gltf', embed_buffers=True)
+
+        return {'status': 'Conversion complete', 'output_file': output_file_name + ".gltf"}
+    except Exception as e:
+        return {'status': 'Conversion failed'}
